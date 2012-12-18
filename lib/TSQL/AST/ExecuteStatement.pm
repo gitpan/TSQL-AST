@@ -1,6 +1,6 @@
 use MooseX::Declare;
 
-class TSQL::AST::ExecuteStatement Extends TSQL::AST::SQLStatement {
+class TSQL::AST::ExecuteStatement extends TSQL::AST::SQLStatement {
 
 
 has 'procedureName' => (

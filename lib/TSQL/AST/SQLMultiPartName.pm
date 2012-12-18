@@ -1,7 +1,7 @@
 
 use MooseX::Declare;
 
-class TSQL::AST::SQLMultiPartName Extends TSQL::AST::SQLFragment {
+class TSQL::AST::SQLMultiPartName extends TSQL::AST::SQLFragment {
 }
 
 

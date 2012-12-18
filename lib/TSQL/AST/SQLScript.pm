@@ -1,6 +1,6 @@
 use MooseX::Declare;
 
-class TSQL::AST::SQLScript Extends TSQL::AST::SQLFragment {
+class TSQL::AST::SQLScript extends TSQL::AST::SQLFragment {
 
 has 'statements' => (
       is  => 'rw',

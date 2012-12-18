@@ -1,6 +1,6 @@
 use MooseX::Declare;
 
-class TSQL::AST::SelectStatement Extends TSQL::AST::SQLStatement {
+class TSQL::AST::SelectStatement extends TSQL::AST::SQLStatement {
 
 
 }

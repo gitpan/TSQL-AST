@@ -13,34 +13,40 @@ TSQL::AST - 'Abstract Syntax Tree' for TSQL.
 
 =head1 VERSION
 
-Version 0.01_000 
+Version 0.01_001 
 
 =cut
 
-our $VERSION = '0.01_000';
-
+our $VERSION = '0.01_001';
 
 has 'script' => (
       is  => 'rw',
       isa => 'TSQL::AST::SQLScript',
   );
 
-method new ()  {}  
+method preParse ( ArrayRef[Str] :$input ) {
+
+    my @output = undef;
+    foreach my $ln ($input) {
+    }
+}
+
   
 method parse ()  {
 
     local $_ = undef;
     
-    my $self        = shift ;
     my $ra_input    = shift ;
     my $parsed      = shift ;
     
     if (scalar @$ra_input)  {
         my $thisLine = $$ra_input[0] ;
-        my $Object = TSQL::AST->resolve(thisLine) ;
+        my $Object = TSQL::AST->resolve($thisLine) ;
         
         
     }
+}
+
 }
 
 

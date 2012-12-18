@@ -1,6 +1,6 @@
 use MooseX::Declare;
 
-class TSQL::AST::VariableDeclaration Extends TSQL::AST::SQLFragment {
+class TSQL::AST::VariableDeclaration extends TSQL::AST::SQLFragment {
 
 has 'variableName' => (
       is  => 'rw',

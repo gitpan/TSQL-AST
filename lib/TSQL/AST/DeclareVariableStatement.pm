@@ -1,6 +1,6 @@
 use MooseX::Declare;
 
-class TSQL::AST::DeclareVariableStatement Extends TSQL::AST::SQLStatement {
+class TSQL::AST::DeclareVariableStatement extends TSQL::AST::SQLStatement {
 
 has 'variableDeclarations' => (
       is  => 'rw',

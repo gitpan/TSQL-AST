@@ -1,6 +1,6 @@
 use MooseX::Declare;
 
-class TSQL::AST::ParameterUsage Extends TSQL::AST::SQLFragment {
+class TSQL::AST::ParameterUsage extends TSQL::AST::SQLFragment {
 
 
 }

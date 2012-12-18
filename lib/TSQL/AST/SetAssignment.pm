@@ -1,6 +1,6 @@
 use MooseX::Declare;
 
-class TSQL::AST::SetAssignment Extends TSQL::AST::SQLStatement {
+class TSQL::AST::SetAssignment extends TSQL::AST::SQLStatement {
 
 has 'targetVariable' => (
       is  => 'rw',

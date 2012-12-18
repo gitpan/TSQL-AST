@@ -1,6 +1,6 @@
 use MooseX::Declare;
 
-class TSQL::AST::ScalarSubQuery Extends TSQL::AST::SQLFragment {
+class TSQL::AST::ScalarSubQuery extends TSQL::AST::SQLFragment {
 
 
 }

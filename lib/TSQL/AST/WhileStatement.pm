@@ -1,6 +1,6 @@
 use MooseX::Declare;
 
-class TSQL::AST::WhileStatement Extends TSQL::AST::SQLStatement {
+class TSQL::AST::WhileStatement extends TSQL::AST::SQLStatement {
 
 has 'condition' => (
       is  => 'rw',

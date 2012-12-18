@@ -1,6 +1,6 @@
 use MooseX::Declare;
 
-class TSQL::AST::SQLVariableName Extends TSQL::AST::SQLFragment {
+class TSQL::AST::SQLVariableName extends TSQL::AST::SQLFragment {
 }
 
 

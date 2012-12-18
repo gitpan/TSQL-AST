@@ -1,6 +1,6 @@
 use MooseX::Declare;
 
-class TSQL::AST::SelectAssignmentWithoutDataSourceStatement Extends TSQL::AST::SQLStatement {
+class TSQL::AST::SelectAssignmentWithoutDataSourceStatement extends TSQL::AST::SQLStatement {
 
 
 has 'targetVariables' => (

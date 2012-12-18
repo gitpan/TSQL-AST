@@ -1,6 +1,6 @@
 use MooseX::Declare;
 
-class TSQL::AST::UpdateStatement Extends TSQL::AST::SQLStatement {
+class TSQL::AST::UpdateStatement extends TSQL::AST::SQLStatement {
 
 
 has 'updateTarget' => (

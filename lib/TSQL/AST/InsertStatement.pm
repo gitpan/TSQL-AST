@@ -1,6 +1,6 @@
 use MooseX::Declare;
 
-class TSQL::AST::InsertStatement Extends TSQL::AST::SQLStatement {
+class TSQL::AST::InsertStatement extends TSQL::AST::SQLStatement {
 
 
 has 'insertTarget' => (

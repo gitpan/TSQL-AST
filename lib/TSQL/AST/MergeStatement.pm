@@ -1,6 +1,6 @@
 use MooseX::Declare;
 
-class TSQL::AST::MergeStatement Extends TSQL::AST::SQLStatement {
+class TSQL::AST::MergeStatement extends TSQL::AST::SQLStatement {
 
 has 'mergeTarget' => (
       is  => 'rw',

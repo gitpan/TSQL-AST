@@ -1,6 +1,6 @@
 use MooseX::Declare;
 
-class TSQL::AST::SQLStatement Extends TSQL::AST::SQLFragment {
+class TSQL::AST::SQLStatement extends TSQL::AST::SQLFragment {
 
 }
 
