@@ -1,12 +1,23 @@
 #!perl -T
 
-use Test::More tests => 33;
+use Test::More tests => 41;
 
 BEGIN {
 
-eval "use TSQL::AST;";
-
     use_ok( 'TSQL::AST' ) || print "Bail out!\n";
+    
+    
+    use_ok( 'TSQL::AST::SQLLabel' ) || print "Bail out!\n";
+    
+    use_ok( 'TSQL::AST::SQLBegin' ) || print "Bail out!\n";
+    use_ok( 'TSQL::AST::SQLEnd' ) || print "Bail out!\n";
+    use_ok( 'TSQL::AST::SQLBeginCatch' ) || print "Bail out!\n";
+    use_ok( 'TSQL::AST::SQLEndCatch' ) || print "Bail out!\n";
+    use_ok( 'TSQL::AST::SQLBeginTry' ) || print "Bail out!\n";
+    use_ok( 'TSQL::AST::SQLEndTry' ) || print "Bail out!\n";
+
+    use_ok( 'TSQL::AST::SQLElse' ) || print "Bail out!\n";
+    
     use_ok( 'TSQL::AST::SQLConditionalExpression' ) || print "Bail out!\n";
     use_ok( 'TSQL::AST::SQLDeclareCursorStatement' ) || print "Bail out!\n";
     use_ok( 'TSQL::AST::SQLDeclareTableVariable' ) || print "Bail out!\n";

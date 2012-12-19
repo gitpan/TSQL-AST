@@ -2,6 +2,9 @@ use MooseX::Declare;
 
 class TSQL::AST::SQLExecuteStatement extends TSQL::AST::SQLStatement {
 
+use TSQL::AST::SQLMultiPartName;
+use TSQL::AST::SQLParameterUsage;
+
 
 has 'procedureName' => (
       is  => 'rw',

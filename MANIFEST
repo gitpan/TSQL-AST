@@ -1,5 +1,13 @@
 Changes
 lib/TSQL/AST.pm
+lib/TSQL/AST/SQLBegin.pm
+lib/TSQL/AST/SQLEnd.pm
+lib/TSQL/AST/SQLBeginCatch.pm
+lib/TSQL/AST/SQLEndCatch.pm
+lib/TSQL/AST/SQLBeginTry.pm
+lib/TSQL/AST/SQLEndTry.pm
+lib/TSQL/AST/SQLLabel.pm
+lib/TSQL/AST/SQLElse.pm
 lib/TSQL/AST/SQLConditionalExpression.pm
 lib/TSQL/AST/SQLDeclareCursorStatement.pm
 lib/TSQL/AST/SQLDeclareTableVariable.pm

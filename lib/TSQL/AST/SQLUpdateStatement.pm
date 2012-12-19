@@ -2,6 +2,8 @@ use MooseX::Declare;
 
 class TSQL::AST::SQLUpdateStatement extends TSQL::AST::SQLStatement {
 
+use TSQL::AST::SQLMultiPartName;
+use TSQL::AST::SQLVariableName;
 
 has 'updateTarget' => (
       is  => 'rw',

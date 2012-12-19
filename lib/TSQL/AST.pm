@@ -8,9 +8,24 @@ use strict;
 
 use Switch;
 
-use TSQL::AST::SQLIfStatement;
-use TSQL::AST::SQLFragment;
+use TSQL::AST::SQLScript;
 
+use TSQL::AST::SQLBegin;
+use TSQL::AST::SQLEnd;
+
+use TSQL::AST::SQLBeginTry;
+use TSQL::AST::SQLEndTry;
+
+use TSQL::AST::SQLBeginCatch;
+use TSQL::AST::SQLEndCatch;
+
+use TSQL::AST::SQLIfStatement;
+use TSQL::AST::SQLElse;
+use TSQL::AST::SQLWhileStatement;
+
+use TSQL::AST::SQLLabel;
+use TSQL::AST::SQLFragment;
+use TSQL::AST::SQLScript;
 
 =head1 NAME
 
@@ -18,51 +33,79 @@ TSQL::AST - 'Abstract Syntax Tree' for TSQL.
 
 =head1 VERSION
 
-Version 0.01_002 
+Version 0.01_003 
 
 =cut
 
-our $VERSION = '0.01_002';
+our $VERSION = '0.01_003';
 
 has 'script' => (
       is  => 'rw',
       isa => 'TSQL::AST::SQLScript',
   );
 
-method preParse ( ArrayRef[Str] :$input ) {
-
-    my @output = undef;
-    foreach my $ln ($input) {
-#        my 
-        
+method preParse ( ArrayRef[Str] $input ) {
+    my @output ;
+    foreach my $ln (@$input) {
+#say $ln;    
+        my $x = $self->makeObject($ln);
+        push @output, $x;
     }
+    return @output;
 }
 
-method makeObject ( Str  :$input) {
+method makeObject ( Str  $input) {
+    my $o ;
+    switch ($input) {
+        case m{\A \s* (?:\b begin \b) \s* \z }xi    
+                { $o = TSQL::AST::SQLBegin->new( tokenString => $input ) ; }
+        case m{\A \s* (?:\b end \b) \s* \z }xi      
+                { $o = TSQL::AST::SQLEnd->new( tokenString => $input ) ; }
+        
+        case m{\A \s* (?:\b begin \b \s* \b try \b ) \s* \z }xi    
+                { $o = TSQL::AST::SQLBeginTry->new( tokenString => $input ) ; }
+        case m{\A \s* (?:\b end \b \s* \b try \b ) \s*  \z }xi      
+                { $o = TSQL::AST::SQLEndTry->new( tokenString => $input ) ; }
+
+        case m{\A \s* (?:\b begin \b  \s* \b catch \b) \s*  \z }xi    
+                { $o = TSQL::AST::SQLBeginCatch->new( tokenString => $input ) ; }
+        case m{\A \s* (?:\b end \b  \s* \b catch \b) \s*  \z }xi      
+                { $o = TSQL::AST::SQLEndCatch->new( tokenString => $input ) ; }
 
 
-switch ($input) {
-    case m{\bif\b}  { return TSQL::AST::SQLIfStatement->new( tokenString => $input ) ; }
-    else            { return TSQL::AST::SQLFragment->new( tokenString => $input ) ; }
-}
+        case m{\A \s* (?:\b else \b ) \s* \z }xi      
+                { $o = TSQL::AST::SQLElse->new( tokenString => $input ) ; }
 
-    
+# need to make some common ground with statement split
+#q{(?:[#_\w$@][#$:_.\w]*[:])}
+
+
+        case m{\A \s* (?:\b (?:[#_\w$@][#$:_.\w]*[:]))  }xi  
+                { $o = TSQL::AST::SQLLabel->new( tokenString => $input ) ; }
+        case m{\A \s* (?:\b if \b)}xi  
+                { $o = TSQL::AST::SQLIfStatement->new( tokenString => $input ) ; }
+        case m{\A \s* (?:\b while \b)}xi  
+                { $o = TSQL::AST::SQLWhileStatement->new( tokenString => $input ) ; }
+        else                             { $o = TSQL::AST::SQLFragment->new( tokenString => $input ) ; }
+    }
+    #$o->dump();
+    return $o;  
 }
   
-method parse ()  {
-
-    local $_ = undef;
-    
-    my $ra_input    = shift ;
-    my $parsed      = shift ;
-    
-    if (scalar @$ra_input)  {
-        my $thisLine = $$ra_input[0] ;
-        my $Object = TSQL::AST->resolve($thisLine) ;
-        
-        
-    }
-}
+#method parse ()  {
+#
+#    local $_ = undef;
+#    
+#    my $ra_input    = shift ;
+#    my $parsed      = shift ;
+#    
+#    if (scalar @$ra_input)  {
+#        my $thisLine = $$ra_input[0] ;
+#        my $Object = TSQL::AST->resolve($thisLine) ;
+#        
+#        
+#    }
+#}
 
 }
 
