@@ -6,9 +6,12 @@ use 5.010;
 use warnings;
 use strict;
 
-use Switch;
+use feature "switch";
 
 use TSQL::AST::SQLScript;
+use TSQL::AST::SQLStatement;
+use TSQL::AST::SQLStatementBlock;
+use TSQL::AST::SQLBatch;
 
 use TSQL::AST::SQLBegin;
 use TSQL::AST::SQLEnd;
@@ -33,21 +36,21 @@ TSQL::AST - 'Abstract Syntax Tree' for TSQL.
 
 =head1 VERSION
 
-Version 0.01_003 
+Version 0.01_004 
 
 =cut
 
-our $VERSION = '0.01_003';
+our $VERSION = '0.01_004';
 
 has 'script' => (
       is  => 'rw',
       isa => 'TSQL::AST::SQLScript',
   );
 
+
 method preParse ( ArrayRef[Str] $input ) {
     my @output ;
     foreach my $ln (@$input) {
-#say $ln;    
         my $x = $self->makeObject($ln);
         push @output, $x;
     }
@@ -56,56 +59,54 @@ method preParse ( ArrayRef[Str] $input ) {
 
 method makeObject ( Str  $input) {
     my $o ;
-    switch ($input) {
-        case m{\A \s* (?:\b begin \b) \s* \z }xi    
+    given ($input) {
+
+        when ( m{\A \s* (?:\b begin \b) \s* \z }xi    )
                 { $o = TSQL::AST::SQLBegin->new( tokenString => $input ) ; }
-        case m{\A \s* (?:\b end \b) \s* \z }xi      
+        when ( m{\A \s* (?:\b end \b) \s* \z }xi      )
                 { $o = TSQL::AST::SQLEnd->new( tokenString => $input ) ; }
         
-        case m{\A \s* (?:\b begin \b \s* \b try \b ) \s* \z }xi    
+        when ( m{\A \s* (?:\b begin \b \s* \b try \b ) \s* \z }xi    )
                 { $o = TSQL::AST::SQLBeginTry->new( tokenString => $input ) ; }
-        case m{\A \s* (?:\b end \b \s* \b try \b ) \s*  \z }xi      
+        when ( m{\A \s* (?:\b end \b \s* \b try \b ) \s*  \z }xi      )
                 { $o = TSQL::AST::SQLEndTry->new( tokenString => $input ) ; }
 
-        case m{\A \s* (?:\b begin \b  \s* \b catch \b) \s*  \z }xi    
+        when ( m{\A \s* (?:\b begin \b  \s* \b catch \b) \s*  \z }xi    )
                 { $o = TSQL::AST::SQLBeginCatch->new( tokenString => $input ) ; }
-        case m{\A \s* (?:\b end \b  \s* \b catch \b) \s*  \z }xi      
+        when ( m{\A \s* (?:\b end \b  \s* \b catch \b) \s*  \z }xi      )
                 { $o = TSQL::AST::SQLEndCatch->new( tokenString => $input ) ; }
 
-
-        case m{\A \s* (?:\b else \b ) \s* \z }xi      
+        when ( m{\A \s* (?:\b else \b ) \s* \z }xi      )
                 { $o = TSQL::AST::SQLElse->new( tokenString => $input ) ; }
 
 # need to make some common ground with statement split
 #q{(?:[#_\w$@][#$:_.\w]*[:])}
-
-
-        case m{\A \s* (?:\b (?:[#_\w$@][#$:_.\w]*[:]))  }xi  
+        when ( m{\A \s* (?:\b (?:[#_\w$@][#$:_.\w]*[:]))  }xi  )
                 { $o = TSQL::AST::SQLLabel->new( tokenString => $input ) ; }
-        case m{\A \s* (?:\b if \b)}xi  
+
+        when ( m{\A \s* (?:\b if \b)}xi  )
                 { $o = TSQL::AST::SQLIfStatement->new( tokenString => $input ) ; }
-        case m{\A \s* (?:\b while \b)}xi  
+        when ( m{\A \s* (?:\b while \b)}xi  )
                 { $o = TSQL::AST::SQLWhileStatement->new( tokenString => $input ) ; }
-        else                             { $o = TSQL::AST::SQLFragment->new( tokenString => $input ) ; }
+        default { $o = TSQL::AST::SQLFragment->new( tokenString => $input ) ; }
     }
-    #$o->dump();
     return $o;  
 }
   
-#method parse ()  {
-#
-#    local $_ = undef;
-#    
-#    my $ra_input    = shift ;
-#    my $parsed      = shift ;
-#    
-#    if (scalar @$ra_input)  {
-#        my $thisLine = $$ra_input[0] ;
-#        my $Object = TSQL::AST->resolve($thisLine) ;
-#        
-#        
-#    }
-#}
+method parse ()  {
+
+    local $_ = undef;
+    
+    my $ra_input    = shift ;
+    my $parsed      = shift ;
+    
+    if (scalar @$ra_input)  {
+        my $thisLine = $$ra_input[0] ;
+        my $Object = TSQL::AST->resolve($thisLine) ;
+        
+        
+    }
+}
 
 }
 
@@ -126,23 +127,23 @@ TSQL::AST depends on the following modules:
 
 =over 4
 
-=item * <Data::Dumper>
+=item * L<Data::Dumper>
 
-=item * <List::MoreUtils>
+=item * L<List::MoreUtils>
 
-=item * <List::Util>
+=item * L<List::Util>
 
-=item * <Moose>
+=item * L<Moose>
 
-=item * <MooseX::Declare>
+=item * L<MooseX::Declare>
 
-=item * <MooseX::Method::Signatures>
+=item * L<MooseX::Method::Signatures>
 
-=item * <autodie>
+=item * L<autodie>
 
-=item * <indirect>
+=item * L<indirect>
 
-=item * <version>
+=item * L<version>
 
 =back
 
