@@ -1,6 +1,6 @@
 use MooseX::Declare;
 
-class TSQL::AST::ExecuteStatement extends TSQL::AST::SQLStatement {
+class TSQL::AST::SQLExecuteStatement extends TSQL::AST::SQLStatement {
 
 
 has 'procedureName' => (
@@ -11,7 +11,7 @@ has 'procedureName' => (
 
 has 'parameterUsage' => (
       is  => 'rw',
-      isa => 'ArrayRef[TSQL::AST::ParameterUsage]',
+      isa => 'ArrayRef[TSQL::AST::SQLParameterUsage]',
   );
 
 }

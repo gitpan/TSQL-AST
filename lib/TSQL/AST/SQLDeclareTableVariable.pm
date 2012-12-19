@@ -1,6 +1,6 @@
 use MooseX::Declare;
 
-class TSQL::AST::DeclareTableVariable extends TSQL::AST::SQLStatement {
+class TSQL::AST::SQLDeclareTableVariable extends TSQL::AST::SQLStatement {
 
 
 has 'tableName' => (

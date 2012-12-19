@@ -1,10 +1,10 @@
 use MooseX::Declare;
 
-class TSQL::AST::IfStatement extends TSQL::AST::SQLStatement {
+class TSQL::AST::SQLIfStatement extends TSQL::AST::SQLStatement {
 
 has 'condition' => (
       is  => 'rw',
-      isa => 'TSQL::AST::ConditionalExpression',
+      isa => 'TSQL::AST::SQLConditionalExpression',
   );
 
 

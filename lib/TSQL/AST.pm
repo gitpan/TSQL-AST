@@ -6,6 +6,11 @@ use 5.010;
 use warnings;
 use strict;
 
+use Switch;
+
+use TSQL::AST::SQLIfStatement;
+use TSQL::AST::SQLFragment;
+
 
 =head1 NAME
 
@@ -13,11 +18,11 @@ TSQL::AST - 'Abstract Syntax Tree' for TSQL.
 
 =head1 VERSION
 
-Version 0.01_001 
+Version 0.01_002 
 
 =cut
 
-our $VERSION = '0.01_001';
+our $VERSION = '0.01_002';
 
 has 'script' => (
       is  => 'rw',
@@ -28,9 +33,21 @@ method preParse ( ArrayRef[Str] :$input ) {
 
     my @output = undef;
     foreach my $ln ($input) {
+#        my 
+        
     }
 }
 
+method makeObject ( Str  :$input) {
+
+
+switch ($input) {
+    case m{\bif\b}  { return TSQL::AST::SQLIfStatement->new( tokenString => $input ) ; }
+    else            { return TSQL::AST::SQLFragment->new( tokenString => $input ) ; }
+}
+
+    
+}
   
 method parse ()  {
 

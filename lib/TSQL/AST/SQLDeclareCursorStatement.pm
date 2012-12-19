@@ -1,6 +1,6 @@
 use MooseX::Declare;
 
-class TSQL::AST::DeclareCursorStatement extends TSQL::AST::SQLStatement {
+class TSQL::AST::SQLDeclareCursorStatement extends TSQL::AST::SQLStatement {
 
 
 has 'cursorName' => (

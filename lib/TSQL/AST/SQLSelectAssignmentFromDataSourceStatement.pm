@@ -1,12 +1,13 @@
 use MooseX::Declare;
 
-class TSQL::AST::SelectAssignmentWithoutDataSourceStatement extends TSQL::AST::SQLStatement {
+class TSQL::AST::SQLSelectAssignmentFromDataSourceStatement extends TSQL::AST::SQLStatement {
 
 
 has 'targetVariables' => (
       is  => 'rw',
       isa => 'ArrayRef[TSQL::AST::SQLIdentifier]',
   );
+
 
 }
 

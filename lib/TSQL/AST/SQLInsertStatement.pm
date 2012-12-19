@@ -1,12 +1,13 @@
 use MooseX::Declare;
 
-class TSQL::AST::UpdateStatement extends TSQL::AST::SQLStatement {
+class TSQL::AST::SQLInsertStatement extends TSQL::AST::SQLStatement {
 
 
-has 'updateTarget' => (
+has 'insertTarget' => (
       is  => 'rw',
       isa => 'TSQL::AST::SQLMultiPartName | TSQL::AST::SQLVariableName ',
   );
+
 
 
 }
