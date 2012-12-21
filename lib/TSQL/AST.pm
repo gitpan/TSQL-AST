@@ -30,17 +30,19 @@ use TSQL::AST::SQLLabel;
 use TSQL::AST::SQLFragment;
 use TSQL::AST::SQLScript;
 
+use Data::Dumper;
+
 =head1 NAME
 
 TSQL::AST - 'Abstract Syntax Tree' for TSQL.
 
 =head1 VERSION
 
-Version 0.01_004 
+Version 0.01_005 
 
 =cut
 
-our $VERSION = '0.01_004';
+our $VERSION = '0.01_005';
 
 has 'script' => (
       is  => 'rw',
@@ -48,13 +50,123 @@ has 'script' => (
   );
 
 
-method preParse ( ArrayRef[Str] $input ) {
-    my @output ;
-    foreach my $ln (@$input) {
-        my $x = $self->makeObject($ln);
-        push @output, $x;
+method parse ( Int $index, ArrayRef[Str] $input,  ArrayRef[TSQL::AST::SQLFragment] $output ) {
+
+    if ( $index >= $#{$input} ) {return;}
+    my $ln = $$input[$index];
+    my $o  = $self->makeObject($ln) ;
+
+    given ($o) {
+        when ( $_->isa('TSQL::AST::SQLBegin') ) { say "";}
+        when ( $_->isa('TSQL::AST::SQLEnd') ) { say "";}
+        default { say "";}
     }
-    return @output;
+    push $output, $o;
+    
+    $self->parse( ++$index,$input,$output );
+    return ;
+}
+
+method parseBlock ( Int $index, ArrayRef[Str] $input,  ArrayRef[TSQL::AST::SQLFragment] $output ) {
+
+    if ( $index >= $#{$input} ) {return;}
+    my $ln = $$input[$index];
+    my $o  = $self->makeObject($ln) ;
+
+    given ($o) {
+        when ( $_->isa('TSQL::AST::SQLBegin') ) { say "";}
+        when ( $_->isa('TSQL::AST::SQLEnd') ) { say "";}
+        default { say "";}
+    }
+    push $output, $o;
+    
+    $self->parse( ++$index,$input,$output );
+    return ;
+}
+
+method parseIf ( Int $index, ArrayRef[Str] $input,  ArrayRef[TSQL::AST::SQLFragment] $output ) {
+
+    if ( $index >= $#{$input} ) {return;}
+    my $ln = $$input[$index];
+    my $o  = $self->makeObject($ln) ;
+
+    given ($o) {
+        when ( $_->isa('TSQL::AST::SQLBegin') ) { say "";}
+        when ( $_->isa('TSQL::AST::SQLEnd') ) { say "";}
+        default { say "";}
+    }
+    push $output, $o;
+    
+    $self->parse( ++$index,$input,$output );
+    return ;
+}
+
+method parseWhile ( Int $index, ArrayRef[Str] $input,  ArrayRef[TSQL::AST::SQLFragment] $output ) {
+
+    if ( $index >= $#{$input} ) {return;}
+    my $ln = $$input[$index];
+    my $o  = $self->makeObject($ln) ;
+
+    given ($o) {
+        when ( $_->isa('TSQL::AST::SQLBegin') ) { say "";}
+        when ( $_->isa('TSQL::AST::SQLEnd') ) { say "";}
+        default { say "";}
+    }
+    push $output, $o;
+    
+    $self->parse( ++$index,$input,$output );
+    return ;
+}
+
+method parseTryCatch ( Int $index, ArrayRef[Str] $input,  ArrayRef[TSQL::AST::SQLFragment] $output ) {
+
+    if ( $index >= $#{$input} ) {return;}
+    my $ln = $$input[$index];
+    my $o  = $self->makeObject($ln) ;
+
+    given ($o) {
+        when ( $_->isa('TSQL::AST::SQLBegin') ) { say "";}
+        when ( $_->isa('TSQL::AST::SQLEnd') ) { say "";}
+        default { say "";}
+    }
+    push $output, $o;
+    
+    $self->parse( ++$index,$input,$output );
+    return ;
+}
+
+method parseBatch ( Int $index, ArrayRef[Str] $input,  ArrayRef[TSQL::AST::SQLFragment] $output ) {
+
+    if ( $index >= $#{$input} ) {return;}
+    my $ln = $$input[$index];
+    my $o  = $self->makeObject($ln) ;
+
+    given ($o) {
+        when ( $_->isa('TSQL::AST::SQLBegin') ) { say "";}
+        when ( $_->isa('TSQL::AST::SQLEnd') ) { say "";}
+        default { say "";}
+    }
+    push $output, $o;
+    
+    $self->parse( ++$index,$input,$output );
+    return ;
+}
+
+method parseScript ( Int $index, ArrayRef[Str] $input,  ArrayRef[TSQL::AST::SQLFragment] $output ) {
+
+    if ( $index >= $#{$input} ) {return;}
+    my $ln = $$input[$index];
+    my $o  = $self->makeObject($ln) ;
+
+    given ($o) {
+        when ( $_->isa('TSQL::AST::SQLBegin') ) { say "";}
+        when ( $_->isa('TSQL::AST::SQLEnd') ) { say "";}
+        default { say "";}
+    }
+    push $output, $o;
+    
+    $self->parse( ++$index,$input,$output );
+    return ;
 }
 
 method makeObject ( Str  $input) {
@@ -66,16 +178,16 @@ method makeObject ( Str  $input) {
         when ( m{\A \s* (?:\b end \b) \s* \z }xi      )
                 { $o = TSQL::AST::SQLEnd->new( tokenString => $input ) ; }
         
-        when ( m{\A \s* (?:\b begin \b \s* \b try \b ) \s* \z }xi    )
-                { $o = TSQL::AST::SQLBeginTry->new( tokenString => $input ) ; }
-        when ( m{\A \s* (?:\b end \b \s* \b try \b ) \s*  \z }xi      )
-                { $o = TSQL::AST::SQLEndTry->new( tokenString => $input ) ; }
-
-        when ( m{\A \s* (?:\b begin \b  \s* \b catch \b) \s*  \z }xi    )
-                { $o = TSQL::AST::SQLBeginCatch->new( tokenString => $input ) ; }
-        when ( m{\A \s* (?:\b end \b  \s* \b catch \b) \s*  \z }xi      )
-                { $o = TSQL::AST::SQLEndCatch->new( tokenString => $input ) ; }
-
+#        when ( m{\A \s* (?:\b begin \b \s* \b try \b ) \s* \z }xi    )
+#                { $o = TSQL::AST::SQLBeginTry->new( tokenString => $input ) ; }
+#        when ( m{\A \s* (?:\b end \b \s* \b try \b ) \s*  \z }xi      )
+#                { $o = TSQL::AST::SQLEndTry->new( tokenString => $input ) ; }
+#
+#        when ( m{\A \s* (?:\b begin \b  \s* \b catch \b) \s*  \z }xi    )
+#                { $o = TSQL::AST::SQLBeginCatch->new( tokenString => $input ) ; }
+#        when ( m{\A \s* (?:\b end \b  \s* \b catch \b) \s*  \z }xi      )
+#                { $o = TSQL::AST::SQLEndCatch->new( tokenString => $input ) ; }
+#
         when ( m{\A \s* (?:\b else \b ) \s* \z }xi      )
                 { $o = TSQL::AST::SQLElse->new( tokenString => $input ) ; }
 
@@ -93,20 +205,29 @@ method makeObject ( Str  $input) {
     return $o;  
 }
   
-method parse ()  {
-
-    local $_ = undef;
-    
-    my $ra_input    = shift ;
-    my $parsed      = shift ;
-    
-    if (scalar @$ra_input)  {
-        my $thisLine = $$ra_input[0] ;
-        my $Object = TSQL::AST->resolve($thisLine) ;
-        
-        
-    }
-}
+#method parse ( TSQL::AST::SQLFragment $fragment, ArrayRef[TSQL::AST::SQLFragment] $input)  {
+#
+#warn Dumper $fragment ;
+#
+#    local $_ = undef;
+#    
+#}
+#
+#method parse ( TSQL::AST::SQLBegin $fragment, ArrayRef[TSQL::AST::SQLFragment] $input)  {
+#
+#warn Dumper $fragment ;
+#
+#    local $_ = undef;
+#    
+#}
+#
+#method parse ( TSQL::AST::SQLEnd $fragment, ArrayRef[TSQL::AST::SQLFragment] $input)  {
+#
+#warn Dumper $fragment ;
+#
+#    local $_ = undef;
+#    
+#}
 
 }
 
@@ -133,11 +254,7 @@ TSQL::AST depends on the following modules:
 
 =item * L<List::Util>
 
-=item * L<Moose>
-
 =item * L<MooseX::Declare>
-
-=item * L<MooseX::Method::Signatures>
 
 =item * L<autodie>
 
@@ -179,10 +296,58 @@ It creates and returns a new TSQL::AST object.
 
 =back
 
-This is the method which ()  parses the split up SQL code.
+This is the method which parses the split up SQL code.
 
-It returns a list containing the atomic statements, in the same order they
-appear in the original SQL code. 
+
+=head2 C<makeObject>
+
+=over 4
+
+=item * C<< $ast->makeObject(sqlfragment) >>
+
+=back
+
+This is the method which decides what kind of object is represented by the current 'statement'.
+
+=head2 C<parseBatch>
+
+=over 4
+
+=item * C<< $ast->parseBatch( array of sqlfragments ) >>
+
+=back
+
+This is a method which parses the split up SQL code.
+
+=head2 C<parseBlock>
+
+=over 4
+
+=item * C<< $ast->parseBlock( array of sqlfragments ) >>
+
+=back
+
+This is a method which parses the split up SQL code.
+
+=head2 C<parseIf>
+
+=over 4
+
+=item * C<< $ast->parseIf( array of sqlfragments ) >>
+
+=back
+
+This is a method which parses the split up SQL code.
+
+=head2 C<parseScript>
+
+=over 4
+
+=item * C<< $ast->parseScript( array of sqlfragments ) >>
+
+=back
+
+This is the method which parses the split up SQL code from the original script.
 
     my $sql_splitter = TSQL::SplitStatement->new();
     
@@ -190,12 +355,30 @@ appear in the original SQL code.
 
     my $sql_parser = TSQL::AST->new();
     
-    my $ast = $sql_parser->parse( \@statements );
+    my $ast = $sql_parser->parseScript( \@statements );
     
 
-=head2 C<tokeniser>
 
 
+=head2 C<parseTryCatch>
+
+=over 4
+
+=item * C<< $ast->parseTryCatch( array of sqlfragments ) >>
+
+=back
+
+This is a method which parses the split up SQL code.
+
+=head2 C<parseWhile>
+
+=over 4
+
+=item * C<< $ast->parseWhile( array of sqlfragments ) >>
+
+=back
+
+This is a method which parses the split up SQL code.
 
 =head1 LIMITATIONS
 

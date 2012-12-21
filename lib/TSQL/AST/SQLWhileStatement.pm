@@ -14,7 +14,7 @@ has 'condition' => (
 
 has 'body' => (
       is  => 'rw',
-      isa => 'TSQL::AST::SQLStatement | TSQL::AST::SQLStatementBlock',
+      isa => 'TSQL::AST::SQLStatement',
   );
 
 

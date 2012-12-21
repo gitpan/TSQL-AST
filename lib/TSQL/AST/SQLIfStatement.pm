@@ -14,13 +14,13 @@ has 'condition' => (
 
 has 'ifBranch' => (
       is  => 'rw',
-      isa => 'TSQL::AST::SQLStatement | TSQL::AST::SQLStatementBlock',
+      isa => 'TSQL::AST::SQLStatement',
   );
 
 
 has 'elseBranch' => (
       is  => 'rw',
-      isa => 'TSQL::AST::SQLStatement | TSQL::AST::SQLStatementBlock',
+      isa => 'TSQL::AST::SQLStatement',
   );
 
 
