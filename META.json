@@ -36,9 +36,7 @@
             "Data::Dumper" : "0",
             "List::MoreUtils" : "0",
             "List::Util" : "0",
-            "Moose" : "0",
             "MooseX::Declare" : "0",
-            "MooseX::Method::Signatures" : "0",
             "Test::More" : "0",
             "autodie" : "0",
             "indirect" : "0",
@@ -48,5 +46,5 @@
       }
    },
    "release_status" : "testing",
-   "version" : "0.01_005"
+   "version" : "0.01_006"
 }

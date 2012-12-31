@@ -42,6 +42,8 @@ lib/TSQL/AST/SQLTryCatchBlock.pm
 lib/TSQL/AST/SQLUpdateStatement.pm
 lib/TSQL/AST/SQLVariableDeclaration.pm
 lib/TSQL/AST/SQLWhileStatement.pm
+samples/parseSQL.sql
+samples/parsetsql.pl
 Makefile.PL
 MANIFEST			This list of files
 README

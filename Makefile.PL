@@ -20,15 +20,13 @@ WriteMakefile(
         'Data::Dumper'                  => 0,
         'List::MoreUtils'               => 0,
         'List::Util'                    => 0,
-        'Moose'                         => 0,
         'MooseX::Declare'               => 0,
-        'MooseX::Method::Signatures'    => 0,
         'autodie'                       => 0,
         'indirect'                      => 0,
         'version'                       => 0,
     },
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-    clean               => { FILES => 'TSQL-SplitStatement-*' },
+    clean               => { FILES => 'TSQL-AST-*' },
 );
 
 
