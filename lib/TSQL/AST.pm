@@ -13,17 +13,17 @@ use TSQL::AST::SQLStatement;
 use TSQL::AST::SQLStatementBlock;
 use TSQL::AST::SQLBatch;
 
-use TSQL::AST::SQLBegin;
-use TSQL::AST::SQLEnd;
+#use TSQL::AST::SQLBegin;
+#use TSQL::AST::SQLEnd;
 
-use TSQL::AST::SQLBeginTry;
-use TSQL::AST::SQLEndTry;
+#use TSQL::AST::SQLBeginTry;
+#use TSQL::AST::SQLEndTry;
 
-use TSQL::AST::SQLBeginCatch;
-use TSQL::AST::SQLEndCatch;
+#use TSQL::AST::SQLBeginCatch;
+#use TSQL::AST::SQLEndCatch;
 
 use TSQL::AST::SQLIfStatement;
-use TSQL::AST::SQLElse;
+#use TSQL::AST::SQLElse;
 use TSQL::AST::SQLWhileStatement;
 
 use TSQL::AST::SQLLabel;
@@ -38,11 +38,11 @@ TSQL::AST - 'Abstract Syntax Tree' for TSQL.
 
 =head1 VERSION
 
-Version 0.01_006 
+Version 0.01_007 
 
 =cut
 
-our $VERSION = '0.01_006';
+our $VERSION = '0.01_007';
 
 has 'script' => (
       is  => 'rw',
@@ -51,184 +51,38 @@ has 'script' => (
 
 
 method parse ( Int $index, ArrayRef[Str] $input,  ArrayRef[TSQL::AST::SQLFragment] $output ) {
-
-    if ( $index >= $#{$input} ) {return;}
-    my $ln = $$input[$index];
-    my $o  = $self->makeObject($ln) ;
-
-    given ($o) {
-        when ( $_->isa('TSQL::AST::SQLBegin') ) { say "";}
-        when ( $_->isa('TSQL::AST::SQLEnd') ) { say "";}
-        default { say "";}
-    }
-    push $output, $o;
-    
-    $self->parse( ++$index,$input,$output );
+    $self->script(TSQL::AST::SQLScript->new() ) ;
+    $self->script()->parse($index,$input,$output);
     return ;
 }
 
-method parseBlock ( Int $index, ArrayRef[Str] $input,  ArrayRef[TSQL::AST::SQLFragment] $output ) {
-
-    if ( $index >= $#{$input} ) {return;}
-    my $ln = $$input[$index];
-    my $o  = $self->makeObject($ln) ;
-
-    given ($o) {
-        when ( $_->isa('TSQL::AST::SQLBegin') ) { say "";}
-        when ( $_->isa('TSQL::AST::SQLEnd') ) { say "";}
-        default { say "";}
-    }
-    push $output, $o;
-    
-    $self->parse( ++$index,$input,$output );
-    return ;
-}
-
-method parseIf ( Int $index, ArrayRef[Str] $input,  ArrayRef[TSQL::AST::SQLFragment] $output ) {
-
-    if ( $index >= $#{$input} ) {return;}
-    my $ln = $$input[$index];
-    my $o  = $self->makeObject($ln) ;
-
-    given ($o) {
-        when ( $_->isa('TSQL::AST::SQLBegin') ) { say "";}
-        when ( $_->isa('TSQL::AST::SQLEnd') ) { say "";}
-        default { say "";}
-    }
-    push $output, $o;
-    
-    $self->parse( ++$index,$input,$output );
-    return ;
-}
-
-method parseWhile ( Int $index, ArrayRef[Str] $input,  ArrayRef[TSQL::AST::SQLFragment] $output ) {
-
-    if ( $index >= $#{$input} ) {return;}
-    my $ln = $$input[$index];
-    my $o  = $self->makeObject($ln) ;
-
-    given ($o) {
-        when ( $_->isa('TSQL::AST::SQLBegin') ) { say "";}
-        when ( $_->isa('TSQL::AST::SQLEnd') ) { say "";}
-        default { say "";}
-    }
-    push $output, $o;
-    
-    $self->parse( ++$index,$input,$output );
-    return ;
-}
-
-method parseTryCatch ( Int $index, ArrayRef[Str] $input,  ArrayRef[TSQL::AST::SQLFragment] $output ) {
-
-    if ( $index >= $#{$input} ) {return;}
-    my $ln = $$input[$index];
-    my $o  = $self->makeObject($ln) ;
-
-    given ($o) {
-        when ( $_->isa('TSQL::AST::SQLBegin') ) { say "";}
-        when ( $_->isa('TSQL::AST::SQLEnd') ) { say "";}
-        default { say "";}
-    }
-    push $output, $o;
-    
-    $self->parse( ++$index,$input,$output );
-    return ;
-}
-
-method parseBatch ( Int $index, ArrayRef[Str] $input,  ArrayRef[TSQL::AST::SQLFragment] $output ) {
-
-    if ( $index >= $#{$input} ) {return;}
-    my $ln = $$input[$index];
-    my $o  = $self->makeObject($ln) ;
-
-    given ($o) {
-        when ( $_->isa('TSQL::AST::SQLBegin') ) { say "";}
-        when ( $_->isa('TSQL::AST::SQLEnd') ) { say "";}
-        default { say "";}
-    }
-    push $output, $o;
-    
-    $self->parse( ++$index,$input,$output );
-    return ;
-}
-
-method parseScript ( Int $index, ArrayRef[Str] $input,  ArrayRef[TSQL::AST::SQLFragment] $output ) {
-
-    if ( $index >= $#{$input} ) {return;}
-    my $ln = $$input[$index];
-    my $o  = $self->makeObject($ln) ;
-
-    given ($o) {
-        when ( $_->isa('TSQL::AST::SQLBegin') ) { say "";}
-        when ( $_->isa('TSQL::AST::SQLEnd') ) { say "";}
-        default { say "";}
-    }
-    push $output, $o;
-    
-    $self->parse( ++$index,$input,$output );
-    return ;
-}
-
-method makeObject ( Str  $input) {
+method makeToken ( Str  $input) {
     my $o ;
     given ($input) {
-
         when ( m{\A \s* (?:\b begin \b) \s* \z }xi    )
-                { $o = TSQL::AST::SQLBegin->new( tokenString => $input ) ; }
+                { $o = TSQL::AST::Token::Begin->new( tokenString => $input ) ; }
         when ( m{\A \s* (?:\b end \b) \s* \z }xi      )
-                { $o = TSQL::AST::SQLEnd->new( tokenString => $input ) ; }
-        
-#        when ( m{\A \s* (?:\b begin \b \s* \b try \b ) \s* \z }xi    )
-#                { $o = TSQL::AST::SQLBeginTry->new( tokenString => $input ) ; }
-#        when ( m{\A \s* (?:\b end \b \s* \b try \b ) \s*  \z }xi      )
-#                { $o = TSQL::AST::SQLEndTry->new( tokenString => $input ) ; }
-#
-#        when ( m{\A \s* (?:\b begin \b  \s* \b catch \b) \s*  \z }xi    )
-#                { $o = TSQL::AST::SQLBeginCatch->new( tokenString => $input ) ; }
-#        when ( m{\A \s* (?:\b end \b  \s* \b catch \b) \s*  \z }xi      )
-#                { $o = TSQL::AST::SQLEndCatch->new( tokenString => $input ) ; }
-#
+                { $o = TSQL::AST::Token::End->new( tokenString => $input ) ; }
+        when ( m{\A \s* (?:\b begin \b \s* \b try \b ) \s* \z }xi    )
+                { $o = TSQL::AST::Token::BeginTry->new( tokenString => $input ) ; }
+        when ( m{\A \s* (?:\b end \b \s* \b try \b ) \s*  \z }xi      )
+                { $o = TSQL::AST::Token::EndTry->new( tokenString => $input ) ; }
+        when ( m{\A \s* (?:\b begin \b  \s* \b catch \b) \s*  \z }xi    )
+                { $o = TSQL::AST::Token::BeginCatch->new( tokenString => $input ) ; }
+        when ( m{\A \s* (?:\b end \b  \s* \b catch \b) \s*  \z }xi      )
+                { $o = TSQL::AST::Token::EndCatch->new( tokenString => $input ) ; }
         when ( m{\A \s* (?:\b else \b ) \s* \z }xi      )
-                { $o = TSQL::AST::SQLElse->new( tokenString => $input ) ; }
-
-# need to make some common ground with statement split
-#q{(?:[#_\w$@][#$:_.\w]*[:])}
-        when ( m{\A \s* (?:\b (?:[#_\w$@][#$:_.\w]*[:]))  }xi  )
-                { $o = TSQL::AST::SQLLabel->new( tokenString => $input ) ; }
-
+                { $o = TSQL::AST::Token::Else->new( tokenString => $input ) ; }
         when ( m{\A \s* (?:\b if \b)}xi  )
-                { $o = TSQL::AST::SQLIfStatement->new( tokenString => $input ) ; }
+                { $o = TSQL::AST::Token::If->new( tokenString => $input ) ; }
+        when ( m{\A \s* (?:\b go \b)}xi  )
+                { $o = TSQL::AST::Token::GO->new( tokenString => $input ) ; }
         when ( m{\A \s* (?:\b while \b)}xi  )
-                { $o = TSQL::AST::SQLWhileStatement->new( tokenString => $input ) ; }
-        default { $o = TSQL::AST::SQLFragment->new( tokenString => $input ) ; }
+                { $o = TSQL::AST::Token::While->new( tokenString => $input ) ; }
     }
     return $o;  
 }
   
-#method parse ( TSQL::AST::SQLFragment $fragment, ArrayRef[TSQL::AST::SQLFragment] $input)  {
-#
-#warn Dumper $fragment ;
-#
-#    local $_ = undef;
-#    
-#}
-#
-#method parse ( TSQL::AST::SQLBegin $fragment, ArrayRef[TSQL::AST::SQLFragment] $input)  {
-#
-#warn Dumper $fragment ;
-#
-#    local $_ = undef;
-#    
-#}
-#
-#method parse ( TSQL::AST::SQLEnd $fragment, ArrayRef[TSQL::AST::SQLFragment] $input)  {
-#
-#warn Dumper $fragment ;
-#
-#    local $_ = undef;
-#    
-#}
-
 }
 
 
@@ -299,11 +153,11 @@ It creates and returns a new TSQL::AST object.
 This is the method which parses the split up SQL code.
 
 
-=head2 C<makeObject>
+=head2 C<makeToken>
 
 =over 4
 
-=item * C<< $ast->makeObject(sqlfragment) >>
+=item * C<< $ast->makeToken(sqlfragment) >>
 
 =back
 

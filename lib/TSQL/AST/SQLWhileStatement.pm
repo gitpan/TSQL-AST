@@ -18,6 +18,11 @@ has 'body' => (
   );
 
 
+
+override parse ( Int $index, ArrayRef[Str] $input,  ArrayRef[TSQL::AST::SQLFragment] $output ) {
+    return ;
+}
+
 }
 
 

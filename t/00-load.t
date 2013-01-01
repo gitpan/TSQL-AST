@@ -1,6 +1,6 @@
 #!perl -T
 
-use Test::More tests => 41;
+use Test::More tests => 46;
 
 BEGIN {
 
@@ -8,15 +8,6 @@ BEGIN {
     
     
     use_ok( 'TSQL::AST::SQLLabel' ) || print "Bail out!\n";
-    
-    use_ok( 'TSQL::AST::SQLBegin' ) || print "Bail out!\n";
-    use_ok( 'TSQL::AST::SQLEnd' ) || print "Bail out!\n";
-    use_ok( 'TSQL::AST::SQLBeginCatch' ) || print "Bail out!\n";
-    use_ok( 'TSQL::AST::SQLEndCatch' ) || print "Bail out!\n";
-    use_ok( 'TSQL::AST::SQLBeginTry' ) || print "Bail out!\n";
-    use_ok( 'TSQL::AST::SQLEndTry' ) || print "Bail out!\n";
-
-    use_ok( 'TSQL::AST::SQLElse' ) || print "Bail out!\n";
     
     use_ok( 'TSQL::AST::SQLConditionalExpression' ) || print "Bail out!\n";
     use_ok( 'TSQL::AST::SQLDeclareCursorStatement' ) || print "Bail out!\n";
@@ -30,7 +21,7 @@ BEGIN {
     use_ok( 'TSQL::AST::SQLInsertStatement' ) || print "Bail out!\n";
     use_ok( 'TSQL::AST::SQLMergeStatement' ) || print "Bail out!\n";
     use_ok( 'TSQL::AST::SQLParameterDeclaration' ) || print "Bail out!\n";
-#    use_ok( 'TSQL::AST::SQLParametersDeclaration' ) || print "Bail out!\n";
+    use_ok( 'TSQL::AST::SQLParameterDeclarations' ) || print "Bail out!\n";
     use_ok( 'TSQL::AST::SQLParameterUsage' ) || print "Bail out!\n";
     use_ok( 'TSQL::AST::SQLScalarSubQuery' ) || print "Bail out!\n";
     use_ok( 'TSQL::AST::SQLSelectAssignmentFromDataSourceStatement' ) || print "Bail out!\n";
@@ -46,13 +37,23 @@ BEGIN {
     use_ok( 'TSQL::AST::SQLQuery' ) || print "Bail out!\n";
     use_ok( 'TSQL::AST::SQLScript' ) || print "Bail out!\n";
     use_ok( 'TSQL::AST::SQLStatement' ) || print "Bail out!\n";
-#    use_ok( 'TSQL::AST::SQLVariableName' ) || print "Bail out!\n";
+    use_ok( 'TSQL::AST::SQLVariableName' ) || print "Bail out!\n";
     use_ok( 'TSQL::AST::SQLStatementBlock' ) || print "Bail out!\n";
     use_ok( 'TSQL::AST::SQLTryCatchBlock' ) || print "Bail out!\n";
     use_ok( 'TSQL::AST::SQLUpdateStatement' ) || print "Bail out!\n";
     use_ok( 'TSQL::AST::SQLVariableDeclaration' ) || print "Bail out!\n";
     use_ok( 'TSQL::AST::SQLWhileStatement' ) || print "Bail out!\n";
-    
+    use_ok( 'TSQL::AST::Token::Begin' ) || print "Bail out!\n";
+    use_ok( 'TSQL::AST::Token::BeginCatch' ) || print "Bail out!\n";
+    use_ok( 'TSQL::AST::Token::BeginTry' ) || print "Bail out!\n";
+    use_ok( 'TSQL::AST::Token::Else' ) || print "Bail out!\n";
+    use_ok( 'TSQL::AST::Token::End' ) || print "Bail out!\n";
+    use_ok( 'TSQL::AST::Token::EndCatch' ) || print "Bail out!\n";
+    use_ok( 'TSQL::AST::Token::EndTry' ) || print "Bail out!\n";
+    use_ok( 'TSQL::AST::Token::GO' ) || print "Bail out!\n";
+    use_ok( 'TSQL::AST::Token::If' ) || print "Bail out!\n";
+    use_ok( 'TSQL::AST::Token::While' ) || print "Bail out!\n";
+
 }
 
 diag( "Testing TSQL::AST $TSQL::AST::VERSION, Perl $], $^X" );

@@ -10,7 +10,10 @@ has 'statements' => (
   );
 
 
+override parse ( Int $index, ArrayRef[Str] $input,  ArrayRef[TSQL::AST::SQLFragment] $output ) {
+    return ;
 }
 
+}
 
 1;
