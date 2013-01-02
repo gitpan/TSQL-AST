@@ -17,6 +17,8 @@ end try
 ***
 */
 
+go
+
 select 1 as a
 from ( select 1 as a union all select 2 ) x
 select 1 as a

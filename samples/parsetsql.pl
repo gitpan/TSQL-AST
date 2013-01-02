@@ -24,13 +24,10 @@ my $parser2 = TSQL::AST->new();
 
 #pp @parsedInput ;
 
-my @preProd = ();
-my $i = 0;
-my @parsedOutput=();
-$parser2->parse($i, \@parsedInput, \@parsedOutput );
+my $parsedOutput= $parser2->parse(\@parsedInput);
 
 #warn Dumper @parsedInput;
-warn Dumper @parsedOutput;
+warn Dumper $parsedOutput;
 
 #$parser2->parse($preProd[0],\@preProd);
 

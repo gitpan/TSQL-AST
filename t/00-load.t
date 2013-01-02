@@ -1,11 +1,13 @@
 #!perl -T
 
-use Test::More tests => 46;
+use Test::More tests => 47;
 
 BEGIN {
 
     use_ok( 'TSQL::AST' ) || print "Bail out!\n";
     
+
+    use_ok( 'TSQL::AST::Factory' ) || print "Bail out!\n";
     
     use_ok( 'TSQL::AST::SQLLabel' ) || print "Bail out!\n";
     

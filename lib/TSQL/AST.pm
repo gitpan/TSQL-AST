@@ -9,9 +9,9 @@ use strict;
 use feature "switch";
 
 use TSQL::AST::SQLScript;
-use TSQL::AST::SQLStatement;
-use TSQL::AST::SQLStatementBlock;
-use TSQL::AST::SQLBatch;
+#use TSQL::AST::SQLStatement;
+#use TSQL::AST::SQLStatementBlock;
+#use TSQL::AST::SQLBatch;
 
 #use TSQL::AST::SQLBegin;
 #use TSQL::AST::SQLEnd;
@@ -22,13 +22,13 @@ use TSQL::AST::SQLBatch;
 #use TSQL::AST::SQLBeginCatch;
 #use TSQL::AST::SQLEndCatch;
 
-use TSQL::AST::SQLIfStatement;
+#use TSQL::AST::SQLIfStatement;
 #use TSQL::AST::SQLElse;
-use TSQL::AST::SQLWhileStatement;
+#use TSQL::AST::SQLWhileStatement;
 
-use TSQL::AST::SQLLabel;
-use TSQL::AST::SQLFragment;
-use TSQL::AST::SQLScript;
+#use TSQL::AST::SQLLabel;
+#use TSQL::AST::SQLFragment;
+#use TSQL::AST::SQLScript;
 
 use Data::Dumper;
 
@@ -38,11 +38,11 @@ TSQL::AST - 'Abstract Syntax Tree' for TSQL.
 
 =head1 VERSION
 
-Version 0.01_007 
+Version 0.01_008 
 
 =cut
 
-our $VERSION = '0.01_007';
+our $VERSION = '0.01_008';
 
 has 'script' => (
       is  => 'rw',
@@ -50,38 +50,13 @@ has 'script' => (
   );
 
 
-method parse ( Int $index, ArrayRef[Str] $input,  ArrayRef[TSQL::AST::SQLFragment] $output ) {
-    $self->script(TSQL::AST::SQLScript->new() ) ;
-    $self->script()->parse($index,$input,$output);
-    return ;
+method parse (ArrayRef[Str] $input) {
+    $self->script(TSQL::AST::SQLScript->new( batches => [] )) ;
+    my $index = 0; 
+    my $output = $self->script()->parse(\$index,$input);
+    return $self ;
 }
 
-method makeToken ( Str  $input) {
-    my $o ;
-    given ($input) {
-        when ( m{\A \s* (?:\b begin \b) \s* \z }xi    )
-                { $o = TSQL::AST::Token::Begin->new( tokenString => $input ) ; }
-        when ( m{\A \s* (?:\b end \b) \s* \z }xi      )
-                { $o = TSQL::AST::Token::End->new( tokenString => $input ) ; }
-        when ( m{\A \s* (?:\b begin \b \s* \b try \b ) \s* \z }xi    )
-                { $o = TSQL::AST::Token::BeginTry->new( tokenString => $input ) ; }
-        when ( m{\A \s* (?:\b end \b \s* \b try \b ) \s*  \z }xi      )
-                { $o = TSQL::AST::Token::EndTry->new( tokenString => $input ) ; }
-        when ( m{\A \s* (?:\b begin \b  \s* \b catch \b) \s*  \z }xi    )
-                { $o = TSQL::AST::Token::BeginCatch->new( tokenString => $input ) ; }
-        when ( m{\A \s* (?:\b end \b  \s* \b catch \b) \s*  \z }xi      )
-                { $o = TSQL::AST::Token::EndCatch->new( tokenString => $input ) ; }
-        when ( m{\A \s* (?:\b else \b ) \s* \z }xi      )
-                { $o = TSQL::AST::Token::Else->new( tokenString => $input ) ; }
-        when ( m{\A \s* (?:\b if \b)}xi  )
-                { $o = TSQL::AST::Token::If->new( tokenString => $input ) ; }
-        when ( m{\A \s* (?:\b go \b)}xi  )
-                { $o = TSQL::AST::Token::GO->new( tokenString => $input ) ; }
-        when ( m{\A \s* (?:\b while \b)}xi  )
-                { $o = TSQL::AST::Token::While->new( tokenString => $input ) ; }
-    }
-    return $o;  
-}
   
 }
 
@@ -153,16 +128,6 @@ It creates and returns a new TSQL::AST object.
 This is the method which parses the split up SQL code.
 
 
-=head2 C<makeToken>
-
-=over 4
-
-=item * C<< $ast->makeToken(sqlfragment) >>
-
-=back
-
-This is the method which decides what kind of object is represented by the current 'statement'.
-
 =head2 C<parseBatch>
 
 =over 4
@@ -205,7 +170,7 @@ This is the method which parses the split up SQL code from the original script.
 
     my $sql_splitter = TSQL::SplitStatement->new();
     
-    my @statements = $sql_splitter->splitSQL( 'SELECT 1;SELECT 2; );
+    my @statements = $sql_splitter->splitSQL( 'SELECT 1;SELECT 2;' );
 
     my $sql_parser = TSQL::AST->new();
     

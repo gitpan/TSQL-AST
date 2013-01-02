@@ -4,6 +4,7 @@ class TSQL::AST::SQLBatch extends TSQL::AST::SQLFragment {
 
 use feature "switch";
 use TSQL::AST::SQLStatement ;
+use TSQL::AST::Factory;
 
 use Data::Dumper;
 
@@ -12,19 +13,23 @@ has 'statements' => (
       isa => 'ArrayRef[TSQL::AST::SQLStatement]',
   );
 
-override parse ( Int $index, ArrayRef[Str] $input ){ #,  TSQL::AST::SQLBatch $output ) {
-    while ( $index < $#{$input} ) {
-        my $ln = $$input[$index];
-        my $t  = $self->makeToken($ln) ;
+override parse ( ScalarRef[Int] $index, ArrayRef[Str] $input ){ 
+
+    while ( $$index <= $#{$input} ) {
+        my $ln = $$input[$$index];
+        my $t  = TSQL::AST::Factory->makeToken($ln) ;
         given ($t) {
-            when ( defined $_ && $_->isa('TSQL::AST::Token::GO') ) { break;}
+            when ( defined $_ && $_->isa('TSQL::AST::Token::GO') ) 
+                { last ;
+                }
             default 
-                { my $o = TSQL::AST::SQLStatement->new( tokenString => $ln ) ;
-warn Dumper $o;                
-#                  push $self->statements(), $o;
+                {
+#warn Dumper "hello", $ln;                
+                my $statement = TSQL::AST::Factory->makeStatement($ln);
+                  push @{$self->statements()}, $statement;
                 } 
         }
-        $index++;
+        $$index++;
     }
     return $self ;
 }

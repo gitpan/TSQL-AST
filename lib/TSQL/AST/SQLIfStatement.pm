@@ -4,7 +4,7 @@ class TSQL::AST::SQLIfStatement extends TSQL::AST::SQLStatement {
 
 use TSQL::AST::SQLStatement;
 use TSQL::AST::SQLConditionalExpression;
-use TSQL::AST::SQLStatementBlock;
+#use TSQL::AST::SQLStatementBlock;
 
 has 'condition' => (
       is  => 'rw',
@@ -24,9 +24,10 @@ has 'elseBranch' => (
   );
 
 
-override parse ( Int $index, ArrayRef[Str] $input,  ArrayRef[TSQL::AST::SQLFragment] $output ) {
-    return ;
-}
+#override parse ( ScalarRef[Int] $index, ArrayRef[Str] $input) {
+#    my $output = undef;
+#    return $output ;
+#}
 
 }
 

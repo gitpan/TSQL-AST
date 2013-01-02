@@ -3,19 +3,19 @@ use MooseX::Declare;
 class TSQL::AST::SQLScript extends TSQL::AST::SQLFragment {
 
 use TSQL::AST::SQLBatch;
+use 5.010;
+use Data::Dumper;
 
-
-has 'statements' => (
+has 'batches' => (
       is  => 'rw',
       isa => 'ArrayRef[TSQL::AST::SQLBatch]',
   );
 
-override parse ( Int $i, ArrayRef[Str] $input,  ArrayRef[TSQL::AST::SQLFragment] $output ) {
-    my $index   = 0;
-    while ( $index < $#{$input} ) {
-        my $batch   = TSQL::AST::SQLBatch->new()->parse( $index, $input )  ;
-#        push $self->statements(), $batch;
-        $index++;
+override parse ( ScalarRef[Int] $index, ArrayRef[Str] $input ) {
+    while ( $$index <= $#{$input} ) {
+        my $batch   = TSQL::AST::SQLBatch->new(statements => [])->parse( $index, $input )  ;
+        push @{$self->batches()}, $batch;
+        $$index++;
     }
     return ;
 }

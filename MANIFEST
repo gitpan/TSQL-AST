@@ -1,5 +1,6 @@
 Changes
 lib/TSQL/AST.pm
+lib/TSQL/AST/Factory.pm
 lib/TSQL/AST/SQLLabel.pm
 lib/TSQL/AST/SQLConditionalExpression.pm
 lib/TSQL/AST/SQLDeclareCursorStatement.pm
