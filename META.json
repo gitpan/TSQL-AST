@@ -37,6 +37,9 @@
             "List::MoreUtils" : "0",
             "List::Util" : "0",
             "MooseX::Declare" : "0",
+            "TSQL::Common::Regexp" : "0",
+            "TSQL::SplitStatement" : "0",
+            "Test::Deep" : "0",
             "Test::More" : "0",
             "autodie" : "0",
             "indirect" : "0",
@@ -45,6 +48,6 @@
          }
       }
    },
-   "release_status" : "testing",
-   "version" : "0.01_008"
+   "release_status" : "stable",
+   "version" : "0.01"
 }

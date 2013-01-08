@@ -9,26 +9,6 @@ use strict;
 use feature "switch";
 
 use TSQL::AST::SQLScript;
-#use TSQL::AST::SQLStatement;
-#use TSQL::AST::SQLStatementBlock;
-#use TSQL::AST::SQLBatch;
-
-#use TSQL::AST::SQLBegin;
-#use TSQL::AST::SQLEnd;
-
-#use TSQL::AST::SQLBeginTry;
-#use TSQL::AST::SQLEndTry;
-
-#use TSQL::AST::SQLBeginCatch;
-#use TSQL::AST::SQLEndCatch;
-
-#use TSQL::AST::SQLIfStatement;
-#use TSQL::AST::SQLElse;
-#use TSQL::AST::SQLWhileStatement;
-
-#use TSQL::AST::SQLLabel;
-#use TSQL::AST::SQLFragment;
-#use TSQL::AST::SQLScript;
 
 use Data::Dumper;
 
@@ -38,11 +18,11 @@ TSQL::AST - 'Abstract Syntax Tree' for TSQL.
 
 =head1 VERSION
 
-Version 0.01_008 
+Version 0.01 
 
 =cut
 
-our $VERSION = '0.01_008';
+our $VERSION = '0.01';
 
 has 'script' => (
       is  => 'rw',
@@ -68,7 +48,18 @@ __DATA__
 
 =head1 SYNOPSIS
 
+Parses Microsoft's Transact SQL dialect of SQL.
+
 =head1 DESCRIPTION
+
+This only provides a very broad brush parse of TSQL.  
+It aims to be accurate in what it does parse, but not to provide any great detail.
+Currently it recursively recognises the major block structure elements of TSQL.
+
+This is still *ALPHA* quality software.  It should still be a developer-only release, but I'm getting tired of those.
+If you've come looking for a full-blown TSQL parser, you're going to leave here very disappointed.
+Even when finished, this is going to leave most of your SQL unparsed.  It's simply intended to support another piece of work,
+which is currently only in the planning stage.
 
 
 =head1 DEPENDENCIES
@@ -76,6 +67,8 @@ __DATA__
 TSQL::AST depends on the following modules:
 
 =over 4
+
+=item * L<TSQL::Common::Regexp>
 
 =item * L<Data::Dumper>
 
@@ -123,49 +116,6 @@ It creates and returns a new TSQL::AST object.
 
 =item * C<< $ast->parse( array of sqlfragments ) >>
 
-=back
-
-This is the method which parses the split up SQL code.
-
-
-=head2 C<parseBatch>
-
-=over 4
-
-=item * C<< $ast->parseBatch( array of sqlfragments ) >>
-
-=back
-
-This is a method which parses the split up SQL code.
-
-=head2 C<parseBlock>
-
-=over 4
-
-=item * C<< $ast->parseBlock( array of sqlfragments ) >>
-
-=back
-
-This is a method which parses the split up SQL code.
-
-=head2 C<parseIf>
-
-=over 4
-
-=item * C<< $ast->parseIf( array of sqlfragments ) >>
-
-=back
-
-This is a method which parses the split up SQL code.
-
-=head2 C<parseScript>
-
-=over 4
-
-=item * C<< $ast->parseScript( array of sqlfragments ) >>
-
-=back
-
 This is the method which parses the split up SQL code from the original script.
 
     my $sql_splitter = TSQL::SplitStatement->new();
@@ -174,30 +124,29 @@ This is the method which parses the split up SQL code from the original script.
 
     my $sql_parser = TSQL::AST->new();
     
-    my $ast = $sql_parser->parseScript( \@statements );
+    my $ast = $sql_parser->parse( \@statements );
     
+=back    
 
-
-
-=head2 C<parseTryCatch>
-
-=over 4
-
-=item * C<< $ast->parseTryCatch( array of sqlfragments ) >>
-
-=back
-
-This is a method which parses the split up SQL code.
-
-=head2 C<parseWhile>
+=head2 C<script>
 
 =over 4
 
-=item * C<< $ast->parseWhile( array of sqlfragments ) >>
+=item * C<< $ast->script() >>
 
-=back
+This is the method which retrieves the AST for the script just parsed.
 
-This is a method which parses the split up SQL code.
+    my $sql_splitter = TSQL::SplitStatement->new();
+    
+    my @statements = $sql_splitter->splitSQL( 'SELECT 1;SELECT 2;' );
+
+    my $sql_parser = TSQL::AST->new();
+    
+    my $ast = $sql_parser->parse( \@statements );
+
+    my $script = $$ast->script();
+    
+=back    
 
 =head1 LIMITATIONS
 

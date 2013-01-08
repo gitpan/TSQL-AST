@@ -1,6 +1,6 @@
 #!perl -T
 
-use Test::More tests => 47;
+use Test::More tests => 51;
 
 BEGIN {
 
@@ -45,6 +45,12 @@ BEGIN {
     use_ok( 'TSQL::AST::SQLUpdateStatement' ) || print "Bail out!\n";
     use_ok( 'TSQL::AST::SQLVariableDeclaration' ) || print "Bail out!\n";
     use_ok( 'TSQL::AST::SQLWhileStatement' ) || print "Bail out!\n";
+
+    use_ok( 'TSQL::AST::SQLCreateOrAlterView' ) || print "Bail out!\n";
+    use_ok( 'TSQL::AST::SQLCreateOrAlterFunction' ) || print "Bail out!\n";
+    use_ok( 'TSQL::AST::SQLCreateOrAlterProcedure' ) || print "Bail out!\n";
+    use_ok( 'TSQL::AST::SQLCreateOrAlterTrigger' ) || print "Bail out!\n";
+
     use_ok( 'TSQL::AST::Token::Begin' ) || print "Bail out!\n";
     use_ok( 'TSQL::AST::Token::BeginCatch' ) || print "Bail out!\n";
     use_ok( 'TSQL::AST::Token::BeginTry' ) || print "Bail out!\n";

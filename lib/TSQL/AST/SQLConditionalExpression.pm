@@ -1,6 +1,15 @@
 use MooseX::Declare;
 
 class TSQL::AST::SQLConditionalExpression extends TSQL::AST::SQLFragment {
+
+#use TSQL::AST::SQLFragment ;
+
+has 'expression' => (
+      is  => 'rw',
+      isa => 'TSQL::AST::SQLFragment',
+  );
+
+
 }
 
 

@@ -2,24 +2,6 @@ use MooseX::Declare;
 
 class TSQL::AST::SQLFragment {
 
-use feature "switch";
-
-use TSQL::AST::Token::Begin;
-use TSQL::AST::Token::BeginCatch;
-use TSQL::AST::Token::BeginTry;
-use TSQL::AST::Token::Else;
-use TSQL::AST::Token::End;
-use TSQL::AST::Token::EndCatch;
-use TSQL::AST::Token::EndTry;
-use TSQL::AST::Token::GO;
-use TSQL::AST::Token::If;
-use TSQL::AST::Token::While;
-
-#use TSQL::AST::SQLIfStatement;
-#use TSQL::AST::SQLTryCatchBlock;
-#use TSQL::AST::SQLWhileStatement;
-#use TSQL::AST::SQLStatement;
-
 use Data::Dumper;
 
 =head1 NAME
@@ -100,6 +82,18 @@ It creates and returns a new TSQL::AST::SQLFragment object.
 =back
 
 This is the method which parses the split up SQL code.
+
+=head2 C<tokenString>
+
+=over 4
+
+=item * C<< $self->tokenString() >>
+
+=back
+
+This is the method that holds the raw input text corresponding to the parsed SQL fragment.
+Derived classes representing compound objects do not populate this field, but delegate it to
+their consituent parts.
 
 
 =head1 LIMITATIONS
