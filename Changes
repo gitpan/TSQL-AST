@@ -2,3 +2,5 @@ Revision history for TSQL::AST
 
 0.01    12/12/12
         First version, released on an unsuspecting world.  Broken.
+0.03    08/01/13
+        Fixed multiple batch script parsing. Added tests.

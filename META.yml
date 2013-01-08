@@ -20,15 +20,16 @@ no_index:
 requires:
   Carp: 0
   Data::Dumper: 0
+  IPC::System::Simple: 0
   List::MoreUtils: 0
   List::Util: 0
   MooseX::Declare: 0
-  TSQL::Common::Regexp: 0
-  TSQL::SplitStatement: 0
+  TSQL::Common::Regexp: 0.02
+  TSQL::SplitStatement: 0.08
   Test::Deep: 0
   Test::More: 0
   autodie: 0
   indirect: 0
   perl: 0
   version: 0
-version: 0.01
+version: 0.02

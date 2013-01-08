@@ -22,10 +22,11 @@ TSQL::AST::SQLBatch - Represents a TSQL Batch of statements.
 
 =head1 VERSION
 
-Version 0.01 
+Version 0.02 
 
 =cut
 
+our $VERSION = '0.02';
 
 has 'statements' => (
       is  => 'rw',
@@ -43,7 +44,7 @@ override parse ( ScalarRef[Int] $index, ArrayRef[Str] $input ){
         my $t  = TSQL::AST::Factory->makeToken($ln) ;
         given ($t) {
             when ( defined $_ && $_->isa('TSQL::AST::Token::GO') ) { 
-                $$index++ ;            
+                #$$index++ ;            
                 last ;
             }
             when ( defined $_ && $_->isa('TSQL::AST::Token::Begin') ) {

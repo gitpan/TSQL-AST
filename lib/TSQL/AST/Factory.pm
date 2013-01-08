@@ -24,6 +24,8 @@ use TSQL::Common::Regexp;
 use Data::Dumper;
 use Carp;
 
+our $VERSION = '0.01';
+
 state $qr_begintoken            //= TSQL::Common::Regexp->qr_begintoken();
 state $qr_endtoken              //= TSQL::Common::Regexp->qr_endtoken();
 state $qr_begintrytoken         //= TSQL::Common::Regexp->qr_begintrytoken();

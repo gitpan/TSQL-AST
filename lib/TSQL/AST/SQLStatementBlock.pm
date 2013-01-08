@@ -26,6 +26,7 @@ Version 0.01
 
 =cut
 
+our $VERSION = '0.01';
 
 has 'statements' => (
       is  => 'rw',

@@ -22,6 +22,8 @@ Version 0.01
 
 =cut
 
+our $VERSION = '0.02';
+
 use feature "switch";
 
 use Data::Dumper;

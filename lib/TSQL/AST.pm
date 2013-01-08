@@ -18,11 +18,11 @@ TSQL::AST - 'Abstract Syntax Tree' for TSQL.
 
 =head1 VERSION
 
-Version 0.01 
+Version 0.02 
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 has 'script' => (
       is  => 'rw',
@@ -60,6 +60,8 @@ This is still *ALPHA* quality software.  It should still be a developer-only rel
 If you've come looking for a full-blown TSQL parser, you're going to leave here very disappointed.
 Even when finished, this is going to leave most of your SQL unparsed.  It's simply intended to support another piece of work,
 which is currently only in the planning stage.
+
+Note TSQL::AST is only intended to parse syntactically valid TSQL.  With invalid TSQL, all bets are off.
 
 
 =head1 DEPENDENCIES
