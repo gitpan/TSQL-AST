@@ -4,6 +4,7 @@ class TSQL::AST::SQLStatementBlock extends TSQL::AST::SQLStatement {
 
 use feature "switch";
 
+use TSQL::AST::Factory;
 use TSQL::AST::SQLFragment ;
 use TSQL::AST::SQLStatement ;
 use TSQL::AST::SQLStatementBlock ;
@@ -11,22 +12,23 @@ use TSQL::AST::SQLTryCatchBlock ;
 
 use TSQL::AST::SQLConditionalExpression;
 use TSQL::AST::SQLIfStatement;
+use TSQL::AST::SQLWhileStatement;
 
-use TSQL::Common::Regexp;
+#use TSQL::Common::Regexp;
 
 use Data::Dumper;
 
 =head1 NAME
 
-TSQL::AST::SQLStatementBlock - Represents set of TSQL Statements with a BEGIN/END Block.
+TSQL::AST::SQLStatementBlock - Represents the set of TSQL Statements within a BEGIN/END Block.
 
 =head1 VERSION
 
-Version 0.01 
+Version 0.02 
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 has 'statements' => (
       is  => 'rw',
@@ -35,11 +37,6 @@ has 'statements' => (
 
 
 override parse ( ScalarRef[Int] $index, ArrayRef[Str] $input) {
-
-    my $qr_iftoken               //= TSQL::Common::Regexp->qr_iftoken();
-    my $qr_elsetoken             //= TSQL::Common::Regexp->qr_elsetoken();
-    my $qr_whiletoken            //= TSQL::Common::Regexp->qr_whiletoken();
-
 
     while ( $$index <= $#{$input} ) {
         my $ln = $$input[$$index];
@@ -65,22 +62,13 @@ override parse ( ScalarRef[Int] $index, ArrayRef[Str] $input) {
             }
             when ( defined $_ && $_->isa('TSQL::AST::Token::If') ) {
                 $$index++;
-                my $condition = $ln;
-                $condition =~ s{$qr_iftoken}{}xmis; # s{\A \s* (?:\b if \b)}{}xmis ;$condition =~ s{\A \s* (?:\b if \b)}{}xmis ;
-                my $fr = TSQL::AST::SQLFragment->new( tokenString => $condition ) ; 
-                my $co = TSQL::AST::SQLConditionalExpression->new( expression => $fr ) ; 
-                my $block = TSQL::AST::SQLIfStatement->new( condition => $co ) ;            
+                my $block = TSQL::AST::Factory->makeIfStatement($ln);
                 $block->parse($index,$input);
                 push @{$self->statements()}, $block;
             }
             when ( defined $_ && $_->isa('TSQL::AST::Token::While') ) {
                 $$index++;
-                my $condition = $ln;
-                $condition =~ s{$qr_whiletoken}{}xmis; # s{\A \s* (?:\b if \b)}{}xmis ;$condition =~ s{\A \s* (?:\b while \b)}{}xmis ;
-                my $fr = TSQL::AST::SQLFragment->new( tokenString => $condition ) ; 
-                my $co = TSQL::AST::SQLConditionalExpression->new( expression => $fr ) ; 
-                my $block = TSQL::AST::SQLWhileStatement->new( condition => $co ) ;            
-#                $$index++;
+                my $block = TSQL::AST::Factory->makeWhileStatement($ln);
                 $block->parse($index,$input);
                 push @{$self->statements()}, $block;
             }     
@@ -169,7 +157,7 @@ Please report any problematic cases.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc TSQL::AST
+    perldoc TSQL::AST::SQLStatementBlock
 
 
 You can also look for information at:

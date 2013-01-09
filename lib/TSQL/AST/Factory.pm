@@ -14,17 +14,25 @@ use TSQL::AST::Token::GO;
 use TSQL::AST::Token::If;
 use TSQL::AST::Token::While;
 
+use TSQL::AST::SQLFragment;
+use TSQL::AST::SQLConditionalExpression;
 use TSQL::AST::SQLIfStatement;
 use TSQL::AST::SQLTryCatchBlock;
 use TSQL::AST::SQLWhileStatement;
 use TSQL::AST::SQLStatement;
+
+use TSQL::AST::Token::CreateOrAlterFunction;
+use TSQL::AST::Token::CreateOrAlterProcedure;
+use TSQL::AST::Token::CreateOrAlterTrigger;
+use TSQL::AST::Token::CreateOrAlterView;
+
 
 use TSQL::Common::Regexp;
 
 use Data::Dumper;
 use Carp;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 state $qr_begintoken            //= TSQL::Common::Regexp->qr_begintoken();
 state $qr_endtoken              //= TSQL::Common::Regexp->qr_endtoken();
@@ -36,6 +44,16 @@ state $qr_iftoken               //= TSQL::Common::Regexp->qr_iftoken();
 state $qr_elsetoken             //= TSQL::Common::Regexp->qr_elsetoken();
 state $qr_whiletoken            //= TSQL::Common::Regexp->qr_whiletoken();
 state $qr_GOtoken               //= TSQL::Common::Regexp->qr_GOtoken();
+
+
+state $qr_createproceduretoken  //= TSQL::Common::Regexp->qr_createproceduretoken();  
+state $qr_alterproceduretoken   //= TSQL::Common::Regexp->qr_alterproceduretoken();  
+state $qr_createtriggertoken    //= TSQL::Common::Regexp->qr_createtriggertoken();  
+state $qr_altertriggertoken     //= TSQL::Common::Regexp->qr_altertriggertoken();  
+state $qr_createviewtoken       //= TSQL::Common::Regexp->qr_createviewtoken();  
+state $qr_alterviewtoken        //= TSQL::Common::Regexp->qr_alterviewtoken();  
+state $qr_createfunctiontoken   //= TSQL::Common::Regexp->qr_createfunctiontoken();  
+state $qr_alterfunctiontoken    //= TSQL::Common::Regexp->qr_alterfunctiontoken();  
 
 sub makeToken  {
 
@@ -81,6 +99,31 @@ sub makeToken  {
         when ( m{$qr_whiletoken}ix  )
                 { $o = TSQL::AST::Token::While->new( tokenString => $input ) ; }
 
+
+        when ( m{$qr_createproceduretoken}ix  )
+                { $o = TSQL::AST::Token::CreateOrAlterProcedure->new( tokenString => $input ) ; }
+
+        when ( m{$qr_alterproceduretoken}ix  )
+                { $o = TSQL::AST::Token::CreateOrAlterProcedure->new( tokenString => $input ) ; }
+
+        when ( m{$qr_createtriggertoken}ix  )
+                { $o = TSQL::AST::Token::CreateOrAlterTrigger->new( tokenString => $input ) ; }
+
+        when ( m{$qr_altertriggertoken}ix  )
+                { $o = TSQL::AST::Token::CreateOrAlterTrigger->new( tokenString => $input ) ; }
+
+        when ( m{$qr_createviewtoken}ix  )
+                { $o = TSQL::AST::Token::CreateOrAlterView->new( tokenString => $input ) ; }
+
+        when ( m{$qr_alterviewtoken}ix  )
+                { $o = TSQL::AST::Token::CreateOrAlterView->new( tokenString => $input ) ; }
+
+        when ( m{$qr_createfunctiontoken}ix  )
+                { $o = TSQL::AST::Token::CreateOrAlterFunction->new( tokenString => $input ) ; }
+
+        when ( m{$qr_alterfunctiontoken}ix  )
+                { $o = TSQL::AST::Token::CreateOrAlterFunction->new( tokenString => $input ) ; }
+
     }
 
     return $o;  
@@ -113,6 +156,39 @@ sub makeStatement {
     }
 }
 
+sub makeIfStatement {
+
+    local $_             = undef ;    
+    
+    my $invocant         = shift ;    
+    my $class            = ref($invocant) || $invocant ;    
+
+    my $condition        = shift ;
+    carp "Missing statement input" if ! defined $condition;
+
+    $condition =~ s{$qr_iftoken}{}xmis; 
+    my $fr = TSQL::AST::SQLFragment->new( tokenString => $condition ) ; 
+    my $co = TSQL::AST::SQLConditionalExpression->new( expression => $fr ) ; 
+    return TSQL::AST::SQLIfStatement->new( condition => $co ) ;            
+
+}
+
+sub makeWhileStatement {
+
+    local $_             = undef ;    
+    
+    my $invocant         = shift ;    
+    my $class            = ref($invocant) || $invocant ;    
+
+    my $condition        = shift ;
+    carp "Missing statement input" if ! defined $condition;
+
+    $condition =~ s{$qr_whiletoken}{}xmis; 
+    my $fr = TSQL::AST::SQLFragment->new( tokenString => $condition ) ; 
+    my $co = TSQL::AST::SQLConditionalExpression->new( expression => $fr ) ; 
+    return TSQL::AST::SQLWhileStatement->new( condition => $co ) ;            
+
+}
 
 1;
 

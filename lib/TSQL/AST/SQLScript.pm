@@ -37,7 +37,6 @@ override parse ( ScalarRef[Int] $index, ArrayRef[Str] $input ) {
 
 1;
 
-__DATA__
 
 __DATA__
 
@@ -105,7 +104,7 @@ Please report any problematic cases.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc TSQL::AST
+    perldoc TSQL::AST::SQLScript
 
 
 You can also look for information at:

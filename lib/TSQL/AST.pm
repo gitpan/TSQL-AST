@@ -18,11 +18,11 @@ TSQL::AST - 'Abstract Syntax Tree' for TSQL.
 
 =head1 VERSION
 
-Version 0.02 
+Version 0.03_001
 
 =cut
 
-our $VERSION = '0.02';
+our $VERSION = '0.03_001';
 
 has 'script' => (
       is  => 'rw',
@@ -52,16 +52,17 @@ Parses Microsoft's Transact SQL dialect of SQL.
 
 =head1 DESCRIPTION
 
-This only provides a very broad brush parse of TSQL.  
+This only provides a very 'broad brush' parse of TSQL.  
 It aims to be accurate in what it does parse, but not to provide any great detail.
 Currently it recursively recognises the major block structure elements of TSQL.
 
 This is still *ALPHA* quality software.  It should still be a developer-only release, but I'm getting tired of those.
 If you've come looking for a full-blown TSQL parser, you're going to leave here very disappointed.
-Even when finished, this is going to leave most of your SQL unparsed.  It's simply intended to support another piece of work,
-which is currently only in the planning stage.
+Even when finished, this is going to leave most of your SQL unparsed.  
+It's intended to support another piece of work, which is currently only in the planning stage, and will have its
+development driven from those requirements as they materialise.
 
-Note TSQL::AST is only intended to parse syntactically valid TSQL.  With invalid TSQL, all bets are off.
+Note TSQL::AST is only intended to parse syntactically valid TSQL.  
 
 
 =head1 DEPENDENCIES
@@ -146,7 +147,7 @@ This is the method which retrieves the AST for the script just parsed.
     
     my $ast = $sql_parser->parse( \@statements );
 
-    my $script = $$ast->script();
+    my $script = $ast->script();
     
 =back    
 

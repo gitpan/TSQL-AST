@@ -65,7 +65,7 @@ Please report any problematic cases.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc TSQL::AST
+    perldoc TSQL::AST::SQLStatement
 
 
 You can also look for information at:

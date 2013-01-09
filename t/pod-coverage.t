@@ -5,10 +5,10 @@ use Test::More;
 
 
 # Ensure a recent version of Test::Pod::Coverage
-#my $min_tpc = 1.08;
-#eval "use Test::Pod::Coverage $min_tpc";
-#plan skip_all => "Test::Pod::Coverage $min_tpc required for testing POD coverage"
-#    if $@;
+my $min_tpc = 1.08;
+eval "use Test::Pod::Coverage $min_tpc";
+plan skip_all => "Test::Pod::Coverage $min_tpc required for testing POD coverage"
+    if $@;
 
 # Test::Pod::Coverage doesn't require a minimum Pod::Coverage version,
 # but older versions don't recognize some common documentation styles
@@ -18,6 +18,16 @@ use Test::More;
 #    if $@;
 
 #all_pod_coverage_ok();
+pod_coverage_ok('TSQL::AST');
+pod_coverage_ok('TSQL::AST::SQLScript');
+pod_coverage_ok('TSQL::AST::SQLBatch');
+pod_coverage_ok('TSQL::AST::SQLFragment');
+pod_coverage_ok('TSQL::AST::SQLStatement');
+pod_coverage_ok('TSQL::AST::SQLStatementBlock');
+pod_coverage_ok('TSQL::AST::SQLTryCatchBlock');
+pod_coverage_ok('TSQL::AST::SQLIfStatement');
+pod_coverage_ok('TSQL::AST::SQLWhileStatement');
 
+done_testing();
 
-plan skip_all => "1";
+#plan skip_all => "1";

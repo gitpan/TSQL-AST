@@ -4,11 +4,13 @@ class TSQL::AST::SQLIfStatement extends TSQL::AST::SQLStatement {
 
 use TSQL::AST::Factory;
 use TSQL::AST::SQLConditionalExpression;
-use TSQL::AST::SQLStatement;
+#use TSQL::AST::SQLFragment;
+#use TSQL::AST::SQLStatement;
 use TSQL::AST::SQLStatementBlock;
 use TSQL::AST::SQLTryCatchBlock;
 
-use TSQL::Common::Regexp;
+use TSQL::AST::SQLWhileStatement;
+
 
 =head1 NAME
 
@@ -16,11 +18,11 @@ TSQL::AST::SQLIfStatement - Represents a TSQL If Statement.
 
 =head1 VERSION
 
-Version 0.01 
+Version 0.02 
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use feature "switch";
 
@@ -44,19 +46,42 @@ has 'elseBranch' => (
   );
 
 
+method _HandleElse ( ScalarRef[TSQL::AST::SQLStatement] $block, ScalarRef[Int] $index, ArrayRef[Str] $input, ScalarRef[Bool] $if, ScalarRef[Bool] $else, Bool $advanceIndex) {
+
+    my $end = 0 ;
+    if ( $$if ) {
+        $self->ifBranch($$block);
+        $$if     = 0 ;
+        $$index++ if $advanceIndex ;
+        if ($$index <= $#{$input}) {
+            my $ln = $$input[$$index];
+            my $t = TSQL::AST::Factory->makeToken($ln);
+            if ( defined $t && $t->isa('TSQL::AST::Token::Else')) {
+                $$index++ unless $advanceIndex ;;
+                $$else = 1 ;
+            }
+            else {
+                $end = 1 ;
+            }
+        }   
+    }
+    else {
+        $self->elseBranch($$block);
+        $$else   = 0 ;      
+    }
+    return scalar $end ;
+}
+
+
+
 override parse ( ScalarRef[Int] $index, ArrayRef[Str] $input) {
 
     my $if     = 1 ;
     my $else   = 0;
     
-    my $qr_iftoken               //= TSQL::Common::Regexp->qr_iftoken();
-    my $qr_elsetoken             //= TSQL::Common::Regexp->qr_elsetoken();
-    my $qr_whiletoken            //= TSQL::Common::Regexp->qr_whiletoken();
-    
     while ( $$index <= $#{$input} ) {
     
         if ($if==0 && $else==0) { 
-#            $$index++;
             last ; 
         } 
         
@@ -71,134 +96,35 @@ override parse ( ScalarRef[Int] $index, ArrayRef[Str] $input) {
                 $$index++;
                 my $block = TSQL::AST::SQLStatementBlock->new( statements => [] ) ;
                 $block->parse($index,$input);
-                if ( $if ) {
-                    $self->ifBranch($block);
-                    $if     = 0 ;
-#                    $$index++;
-                    if ($$index <= $#{$input}) {
-                        my $ln = $$input[$$index];
-                        my $t = TSQL::AST::Factory->makeToken($ln);
-                        if ( defined $t && $t->isa('TSQL::AST::Token::Else')) {
-                            $$index++;
-                            $else = 1 ;
-                        }
-                        else {
-                            last ;
-                        }
-                    }   
-                }
-                else {
-                    $self->elseBranch($block);
-                    $else   = 0 ;      
-                }
+                my $stop = $self->_HandleElse(\$block, $index, $input, \$if, \$else, 0);
+                last if $stop;
             }
             when ( defined $_ && $_->isa('TSQL::AST::Token::BeginTry') ) {
                 $$index++;
                 my $block = TSQL::AST::SQLTryCatchBlock->new( tryBlock => [],catchBlock => [] ) ;
                 $block->parse($index,$input);
-                if ( $if ) {
-                    $self->ifBranch($block);
-                    $if     = 0 ;
-
-#                    $$index++;
-                    if ($$index <= $#{$input}) {
-                        my $ln = $$input[$$index];
-                        my $t = TSQL::AST::Factory->makeToken($ln);
-                        if ( defined $t && $t->isa('TSQL::AST::Token::Else')) {
-                            $$index++;
-                            $else = 1 ;
-                        }
-                        else {
-                            last ;
-                        }
-                    }   
-                }
-                else {
-                    $self->elseBranch($block);
-                    $else   = 0 ;      
-                }
+                my $stop = $self->_HandleElse(\$block, $index, $input, \$if, \$else, 0);
+                last if $stop;
             }
             when ( defined $_ && $_->isa('TSQL::AST::Token::If') ) {
-                my $condition = $ln;
-                $condition =~ s{$qr_iftoken}{}xmis; # s{\A \s* (?:\b if \b)}{}xmis ;$condition =~ s{\A \s* (?:\b while \b)}{}xmis ;
-                my $co = TSQL::AST::SQLConditionalExpression->new( tokenString => $condition ) ; 
-                my $block = TSQL::AST::SQLIfStatement->new( condition => $co ) ;            
-                $$index++;
+                my $block = TSQL::AST::Factory->makeIfStatement($ln);
                 $block->parse($index,$input);
-                if ( $if ) {
-                    $self->ifBranch($block);
-                    $if     = 0 ;
-
-                    $$index++;
-                    if ($$index <= $#{$input}) {
-                        my $ln = $$input[$$index];
-                        my $t = TSQL::AST::Factory->makeToken($ln);
-                        if ( defined $t && $t->isa('TSQL::AST::Token::Else')) {
-                            $else = 1 ;
-                        }
-                        else {
-                            last ;
-                        }
-                    }   
-                }
-                else {
-                    $self->elseBranch($block);
-                    $else   = 0 ;      
-                }
+                my $stop = $self->_HandleElse(\$block, $index, $input, \$if, \$else, 1);
+                last if $stop;
             }                
             when ( defined $_ && $_->isa('TSQL::AST::Token::While') ) {
-                my $condition = $ln;
-                $condition =~ s{$qr_whiletoken}{}xmis; # s{\A \s* (?:\b if \b)}{}xmis ;$condition =~ s{\A \s* (?:\b while \b)}{}xmis ;
-                my $co = TSQL::AST::SQLConditionalExpression->new( tokenString => $condition ) ; 
-                my $block = TSQL::AST::SQLWhileStatement->new( condition => $co ) ;            
                 $$index++;
+                my $block = TSQL::AST::Factory->makeWhileStatement($ln);
                 $block->parse($index,$input);
-                if ( $if ) {
-                    $self->ifBranch($block);
-                    $if     = 0 ;
-
-                    $$index++;
-                    if ($$index <= $#{$input}) {
-                        my $ln = $$input[$$index];
-                        my $t = TSQL::AST::Factory->makeToken($ln);
-                        if ( defined $t && $t->isa('TSQL::AST::Token::Else')) {
-                            $else = 1 ;
-                        }
-                        else {
-                            last ;
-                        }
-                    }   
-                }
-                else {
-                    $self->elseBranch($block);
-                    $else   = 0 ;      
-                }
+                my $stop = $self->_HandleElse(\$block, $index, $input, \$if, \$else, 1);
+                last if $stop;
             }
 
             default { 
                 my $statement = TSQL::AST::Factory->makeStatement($ln);
-#warn Dumper "DEFAULT",$ln;                                  
-#warn Dumper $statement;                  
-                if ( $if ) {
-                    $self->ifBranch($statement);
-                    $if     = 0 ;
+                my $stop = $self->_HandleElse(\$statement, $index, $input, \$if, \$else, 1);
+                last if $stop;
 
-                    $$index++;
-                    if ($$index <= $#{$input}) {
-                        my $ln = $$input[$$index];
-                        my $t = TSQL::AST::Factory->makeToken($ln);
-                        if ( defined $t && $t->isa('TSQL::AST::Token::Else')) {
-                            $else = 1 ;
-                        }
-                        else {
-                            last ;
-                        }
-                    }   
-                }
-                else {
-                    $self->elseBranch($statement);
-                    $else   = 0 ;      
-                }
                 $$index++;
             } 
         }
@@ -246,6 +172,7 @@ See TSQL::AST.
 
 It creates and returns a new TSQL::AST::SQLIfStatement object. 
 
+
 =head2 C<parse>
 
 =over 4
@@ -263,7 +190,7 @@ This is the method which parses the split up SQL code.
 
 =item * C<< $if->condition() >>
 
-TSQL::AST::SQLConditionalExpression representing the condtion clause of the While statement.
+TSQL::AST::SQLConditionalExpression representing the condition clause of the While statement.
     
 =back    
 
@@ -278,13 +205,14 @@ TSQL::AST::SQLStatement representing the body of the If statement if-branch.
     
 =back    
 
+
 =head2 C<elseBranch>
 
 =over 4
 
 =item * C<< $if->elseBranch() >>
 
-TSQL::AST::SQLStatement representing the body of the If statement else-branch.
+Optional TSQL::AST::SQLStatement representing the body of the If statement optional else-branch.
     
 =back    
 
@@ -301,7 +229,7 @@ Please report any problematic cases.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc TSQL::AST
+    perldoc TSQL::AST::SQLIfStatement
 
 
 You can also look for information at:

@@ -1,4 +1,4 @@
-use Test::More tests => 18;
+use Test::More tests => 21;
 use Test::Deep;
 use TSQL::SplitStatement;
 use TSQL::AST;
@@ -843,7 +843,7 @@ if 1=1
 select 2
 ";
 
-my $DumpedAST =  bless( {
+my $DumpedAST =   bless( {
                  'script' => bless( {
                                       'batches' => [
                                                      bless( {
@@ -854,7 +854,9 @@ my $DumpedAST =  bless( {
                                                                                                                                    'tokenString' => 'select 1'
                                                                                                                                  }, 'TSQL::AST::SQLStatement' ),
                                                                                                                 'condition' => bless( {
-                                                                                                                                        'tokenString' => ' 2=2'
+                                                                                                                                        'expression' => bless( {
+                                                                                                                                                                 'tokenString' => ' 2=2'
+                                                                                                                                                               }, 'TSQL::AST::SQLFragment' )
                                                                                                                                       }, 'TSQL::AST::SQLConditionalExpression' )
                                                                                                               }, 'TSQL::AST::SQLWhileStatement' ),
                                                                                          'condition' => bless( {
@@ -868,6 +870,7 @@ my $DumpedAST =  bless( {
                                                    ]
                                     }, 'TSQL::AST::SQLScript' )
                }, 'TSQL::AST' );
+
 
 	my $parser = TSQL::SplitStatement->new();
 	my @parsedInput = $parser->splitSQL($SQL);
@@ -890,7 +893,7 @@ else
 select 3
 ";
 
-my $DumpedAST =  bless( {
+my $DumpedAST =   bless( {
                  'script' => bless( {
                                       'batches' => [
                                                      bless( {
@@ -904,7 +907,9 @@ my $DumpedAST =  bless( {
                                                                                                                                      'tokenString' => 'select 2'
                                                                                                                                    }, 'TSQL::AST::SQLStatement' ),
                                                                                                                   'condition' => bless( {
-                                                                                                                                          'tokenString' => ' 2=2'
+                                                                                                                                          'expression' => bless( {
+                                                                                                                                                                   'tokenString' => ' 2=2'
+                                                                                                                                                                 }, 'TSQL::AST::SQLFragment' )
                                                                                                                                         }, 'TSQL::AST::SQLConditionalExpression' )
                                                                                                                 }, 'TSQL::AST::SQLWhileStatement' ),
                                                                                          'condition' => bless( {
@@ -931,6 +936,158 @@ my $DumpedAST =  bless( {
 	cmp_deeply($parsedOutput, $DumpedAST, "Simple if statement containing while statement followed by statement parses ok");
 };
 
+subtest 'parseWhileIf', sub {
 
+my $SQL = "
+while 1=1
+    if 2=2
+        select 1
+select 3
+";
+
+my $DumpedAST =     bless( {
+                 'script' => bless( {
+                                      'batches' => [
+                                                     bless( {
+                                                              'statements' => [
+                                                                                bless( {
+                                                                                         'body' => bless( {
+                                                                                                            'ifBranch' => bless( {
+                                                                                                                                   'tokenString' => 'select 1'
+                                                                                                                                 }, 'TSQL::AST::SQLStatement' ),
+                                                                                                            'condition' => bless( {
+                                                                                                                                    'expression' => bless( {
+                                                                                                                                                             'tokenString' => ' 2=2'
+                                                                                                                                                           }, 'TSQL::AST::SQLFragment' )
+                                                                                                                                  }, 'TSQL::AST::SQLConditionalExpression' )
+                                                                                                          }, 'TSQL::AST::SQLIfStatement' ),
+                                                                                         'condition' => bless( {
+                                                                                                                 'expression' => bless( {
+                                                                                                                                          'tokenString' => ' 1=1'
+                                                                                                                                        }, 'TSQL::AST::SQLFragment' )
+                                                                                                               }, 'TSQL::AST::SQLConditionalExpression' )
+                                                                                       }, 'TSQL::AST::SQLWhileStatement' ),
+                                                                                bless( {
+                                                                                         'tokenString' => 'select 3'
+                                                                                       }, 'TSQL::AST::SQLStatement' )
+                                                                              ]
+                                                            }, 'TSQL::AST::SQLBatch' )
+                                                   ]
+                                    }, 'TSQL::AST::SQLScript' )
+               }, 'TSQL::AST' );
+
+	my $parser = TSQL::SplitStatement->new();
+	my @parsedInput = $parser->splitSQL($SQL);
+	my $parser2 = TSQL::AST->new();
+	my $parsedOutput= $parser2->parse(\@parsedInput);
+	my $DumpedOutput = Dumper $parsedOutput;
+
+	cmp_deeply($parsedOutput, $DumpedAST, "Simple while if statement containing if statement followed by statement parses ok");
+};
+
+
+subtest 'parseWhileIfElse', sub {
+
+my $SQL = "
+while 1=1
+    if 2=2
+        select 1
+    else
+        select 2
+select 3
+";
+
+my $DumpedAST =    bless( {
+                 'script' => bless( {
+                                      'batches' => [
+                                                     bless( {
+                                                              'statements' => [
+                                                                                bless( {
+                                                                                         'body' => bless( {
+                                                                                                            'ifBranch' => bless( {
+                                                                                                                                   'tokenString' => 'select 1'
+                                                                                                                                 }, 'TSQL::AST::SQLStatement' ),
+                                                                                                            'elseBranch' => bless( {
+                                                                                                                                     'tokenString' => 'select 2'
+                                                                                                                                   }, 'TSQL::AST::SQLStatement' ),
+                                                                                                            'condition' => bless( {
+                                                                                                                                    'expression' => bless( {
+                                                                                                                                                             'tokenString' => ' 2=2'
+                                                                                                                                                           }, 'TSQL::AST::SQLFragment' )
+                                                                                                                                  }, 'TSQL::AST::SQLConditionalExpression' )
+                                                                                                          }, 'TSQL::AST::SQLIfStatement' ),
+                                                                                         'condition' => bless( {
+                                                                                                                 'expression' => bless( {
+                                                                                                                                          'tokenString' => ' 1=1'
+                                                                                                                                        }, 'TSQL::AST::SQLFragment' )
+                                                                                                               }, 'TSQL::AST::SQLConditionalExpression' )
+                                                                                       }, 'TSQL::AST::SQLWhileStatement' ),
+                                                                                bless( {
+                                                                                         'tokenString' => 'select 3'
+                                                                                       }, 'TSQL::AST::SQLStatement' )
+                                                                              ]
+                                                            }, 'TSQL::AST::SQLBatch' )
+                                                   ]
+                                    }, 'TSQL::AST::SQLScript' )
+               }, 'TSQL::AST' );
+
+
+	my $parser = TSQL::SplitStatement->new();
+	my @parsedInput = $parser->splitSQL($SQL);
+	my $parser2 = TSQL::AST->new();
+	my $parsedOutput= $parser2->parse(\@parsedInput);
+	my $DumpedOutput = Dumper $parsedOutput;
+
+	cmp_deeply($parsedOutput, $DumpedAST, "Simple while statement containing if statement with else followed by statement parses ok");
+};
+
+subtest 'parseWhileWhile', sub {
+
+my $SQL = "
+while 1=1
+    while 2=2
+        select 1
+select 3
+";
+
+my $DumpedAST =   bless( {
+                 'script' => bless( {
+                                      'batches' => [
+                                                     bless( {
+                                                              'statements' => [
+                                                                                bless( {
+                                                                                         'body' => bless( {
+                                                                                                            'body' => bless( {
+                                                                                                                               'tokenString' => 'select 1'
+                                                                                                                             }, 'TSQL::AST::SQLStatement' ),
+                                                                                                            'condition' => bless( {
+                                                                                                                                    'expression' => bless( {
+                                                                                                                                                             'tokenString' => ' 2=2'
+                                                                                                                                                           }, 'TSQL::AST::SQLFragment' )
+                                                                                                                                  }, 'TSQL::AST::SQLConditionalExpression' )
+                                                                                                          }, 'TSQL::AST::SQLWhileStatement' ),
+                                                                                         'condition' => bless( {
+                                                                                                                 'expression' => bless( {
+                                                                                                                                          'tokenString' => ' 1=1'
+                                                                                                                                        }, 'TSQL::AST::SQLFragment' )
+                                                                                                               }, 'TSQL::AST::SQLConditionalExpression' )
+                                                                                       }, 'TSQL::AST::SQLWhileStatement' ),
+                                                                                bless( {
+                                                                                         'tokenString' => 'select 3'
+                                                                                       }, 'TSQL::AST::SQLStatement' )
+                                                                              ]
+                                                            }, 'TSQL::AST::SQLBatch' )
+                                                   ]
+                                    }, 'TSQL::AST::SQLScript' )
+               }, 'TSQL::AST' );
+
+	my $parser = TSQL::SplitStatement->new();
+	my @parsedInput = $parser->splitSQL($SQL);
+	my $parser2 = TSQL::AST->new();
+	my $parsedOutput= $parser2->parse(\@parsedInput);
+	my $DumpedOutput = Dumper $parsedOutput;
+
+	cmp_deeply($parsedOutput, $DumpedAST, "Simple while statement containing while statement followed by statement parses ok");
+};
 
 

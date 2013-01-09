@@ -94,7 +94,7 @@ This is the method which parses the split up SQL code.
 
 This is the method that holds the raw input text corresponding to the parsed SQL fragment.
 Derived classes representing compound objects do not populate this field, but delegate it to
-their consituent parts.
+their constituent parts.
 
 
 =head1 LIMITATIONS

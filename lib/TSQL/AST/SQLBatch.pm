@@ -4,29 +4,29 @@ class TSQL::AST::SQLBatch extends TSQL::AST::SQLFragment {
 
 use feature "switch";
 
+use TSQL::AST::Factory;
 use TSQL::AST::SQLFragment ;
 use TSQL::AST::SQLStatement ;
 use TSQL::AST::SQLStatementBlock ;
 use TSQL::AST::SQLTryCatchBlock ;
-use TSQL::AST::Factory;
+
 use TSQL::AST::SQLConditionalExpression;
 use TSQL::AST::SQLIfStatement;
-
-use TSQL::Common::Regexp;
+use TSQL::AST::SQLWhileStatement;
 
 use Data::Dumper;
 
 =head1 NAME
 
-TSQL::AST::SQLBatch - Represents a TSQL Batch of statements.
+TSQL::AST::SQLBatch - Represents a Batch of TSQL statements.
 
 =head1 VERSION
 
-Version 0.02 
+Version 0.03 
 
 =cut
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 has 'statements' => (
       is  => 'rw',
@@ -34,10 +34,6 @@ has 'statements' => (
   );
 
 override parse ( ScalarRef[Int] $index, ArrayRef[Str] $input ){ 
-
-    my $qr_iftoken               //= TSQL::Common::Regexp->qr_iftoken();
-    my $qr_elsetoken             //= TSQL::Common::Regexp->qr_elsetoken();
-    my $qr_whiletoken            //= TSQL::Common::Regexp->qr_whiletoken();
 
     while ( $$index <= $#{$input} ) {
         my $ln = $$input[$$index];
@@ -61,23 +57,13 @@ override parse ( ScalarRef[Int] $index, ArrayRef[Str] $input ){
             }
             when ( defined $_ && $_->isa('TSQL::AST::Token::If') ) {
                 $$index++;
-                my $condition = $ln;
-                $condition =~ s{$qr_iftoken}{}xmis; # s{\A \s* (?:\b if \b)}{}xmis ;
-                my $fr = TSQL::AST::SQLFragment->new( tokenString => $condition ) ; 
-                my $co = TSQL::AST::SQLConditionalExpression->new( expression => $fr ) ; 
-                my $block = TSQL::AST::SQLIfStatement->new( condition => $co ) ;            
-#                $$index++;
+                my $block = TSQL::AST::Factory->makeIfStatement($ln);
                 $block->parse($index,$input);
                 push @{$self->statements()}, $block;
             }
             when ( defined $_ && $_->isa('TSQL::AST::Token::While') ) {
                 $$index++;
-                my $condition = $ln;
-                $condition =~ s{$qr_whiletoken}{}xmis; # s{\A \s* (?:\b while \b)}{}xmis ;
-                my $fr = TSQL::AST::SQLFragment->new( tokenString => $condition ) ; 
-                my $co = TSQL::AST::SQLConditionalExpression->new( expression => $fr ) ; 
-                my $block = TSQL::AST::SQLWhileStatement->new( condition => $co ) ;            
-#                $$index++;
+                my $block = TSQL::AST::Factory->makeWhileStatement($ln);
                 $block->parse($index,$input);
                 push @{$self->statements()}, $block;
             }                
@@ -151,7 +137,7 @@ This is the method which parses the split up SQL code from the original script.
 
 =item * C<< $batch->statements() >>
 
-Array of TSQL::AST::SQLStatement for the script just parsed.
+Array of TSQL::AST::SQLStatement for this batch in the script just parsed.
     
 =back    
 
@@ -167,7 +153,7 @@ Please report any problematic cases.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc TSQL::AST
+    perldoc TSQL::AST::SQLBatch
 
 
 You can also look for information at:

@@ -12,22 +12,21 @@ use TSQL::AST::SQLTryCatchBlock ;
 
 use TSQL::AST::SQLConditionalExpression;
 use TSQL::AST::SQLIfStatement;
-
-use TSQL::Common::Regexp;
+use TSQL::AST::SQLWhileStatement;
 
 use Data::Dumper;
 
 =head1 NAME
 
-TSQL::AST::SQLTryCatchBlock - Represents TSQL Try Catch block.
+TSQL::AST::SQLTryCatchBlock - Represents a TSQL Try Catch block.
 
 =head1 VERSION
 
-Version 0.01 
+Version 0.02 
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 has 'tryBlock' => (
       is  => 'rw',
@@ -42,10 +41,6 @@ has 'catchBlock' => (
 
 
 override parse ( ScalarRef[Int] $index, ArrayRef[Str] $input) {
-
-    my $qr_iftoken               //= TSQL::Common::Regexp->qr_iftoken();
-    my $qr_elsetoken             //= TSQL::Common::Regexp->qr_elsetoken();
-    my $qr_whiletoken            //= TSQL::Common::Regexp->qr_whiletoken();
 
     my $try     = 1 ;
     my $catch   = 0;
@@ -94,12 +89,7 @@ override parse ( ScalarRef[Int] $index, ArrayRef[Str] $input) {
             } #end begintry
             when ( defined $_ && $_->isa('TSQL::AST::Token::If') ) {
                 $$index++;
-                my $condition = $ln;
-                $condition =~ s{$qr_iftoken}{}xmis; # s{\A \s* (?:\b if \b)}{}xmis ;$condition =~ s{\A \s* (?:\b if \b)}{}xmis ;
-                my $fr = TSQL::AST::SQLFragment->new( tokenString => $condition ) ; 
-                my $co = TSQL::AST::SQLConditionalExpression->new( expression => $fr ) ; 
-                my $block = TSQL::AST::SQLIfStatement->new( condition => $co ) ;            
-#                $$index++;
+                my $block = TSQL::AST::Factory->makeIfStatement($ln);
                 $block->parse($index,$input);
                 if ( $try ) {
                     push @{$self->tryBlock()}, $block;
@@ -110,12 +100,7 @@ override parse ( ScalarRef[Int] $index, ArrayRef[Str] $input) {
             } #end if
             when ( defined $_ && $_->isa('TSQL::AST::Token::While') ) {
                 $$index++;
-                my $condition = $ln;
-                $condition =~ s{$qr_whiletoken}{}xmis; # s{\A \s* (?:\b if \b)}{}xmis ;$condition =~ s{\A \s* (?:\b while \b)}{}xmis ;
-                my $fr = TSQL::AST::SQLFragment->new( tokenString => $condition ) ; 
-                my $co = TSQL::AST::SQLConditionalExpression->new( expression => $fr ) ; 
-                my $block = TSQL::AST::SQLWhileStatement->new( condition => $co ) ;            
-#                $$index++;
+                my $block = TSQL::AST::Factory->makeWhileStatement($ln);
                 $block->parse($index,$input);
                 if ( $try ) {
                     push @{$self->tryBlock()}, $block;
@@ -224,7 +209,7 @@ Please report any problematic cases.
 
 You can find documentation for this module with the perldoc command.
 
-    perldoc TSQL::AST
+    perldoc TSQL::AST::SQLTryCatchBlock
 
 
 You can also look for information at:
