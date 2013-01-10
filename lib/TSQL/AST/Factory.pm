@@ -32,28 +32,39 @@ use TSQL::Common::Regexp;
 use Data::Dumper;
 use Carp;
 
+=head1 NAME
+
+TSQL::AST::Factory - Builds various parsing objects.
+
+=head1 VERSION
+
+Version 0.02
+
+=cut
+
+
 our $VERSION = '0.02';
 
-state $qr_begintoken            //= TSQL::Common::Regexp->qr_begintoken();
-state $qr_endtoken              //= TSQL::Common::Regexp->qr_endtoken();
-state $qr_begintrytoken         //= TSQL::Common::Regexp->qr_begintrytoken();
-state $qr_endtrytoken           //= TSQL::Common::Regexp->qr_endtrytoken();
-state $qr_begincatchtoken       //= TSQL::Common::Regexp->qr_begincatchtoken();
-state $qr_endcatchtoken         //= TSQL::Common::Regexp->qr_endcatchtoken();
-state $qr_iftoken               //= TSQL::Common::Regexp->qr_iftoken();
-state $qr_elsetoken             //= TSQL::Common::Regexp->qr_elsetoken();
-state $qr_whiletoken            //= TSQL::Common::Regexp->qr_whiletoken();
-state $qr_GOtoken               //= TSQL::Common::Regexp->qr_GOtoken();
+my $qr_begintoken            //= TSQL::Common::Regexp->qr_begintoken();
+my $qr_endtoken              //= TSQL::Common::Regexp->qr_endtoken();
+my $qr_begintrytoken         //= TSQL::Common::Regexp->qr_begintrytoken();
+my $qr_endtrytoken           //= TSQL::Common::Regexp->qr_endtrytoken();
+my $qr_begincatchtoken       //= TSQL::Common::Regexp->qr_begincatchtoken();
+my $qr_endcatchtoken         //= TSQL::Common::Regexp->qr_endcatchtoken();
+my $qr_iftoken               //= TSQL::Common::Regexp->qr_iftoken();
+my $qr_elsetoken             //= TSQL::Common::Regexp->qr_elsetoken();
+my $qr_whiletoken            //= TSQL::Common::Regexp->qr_whiletoken();
+my $qr_GOtoken               //= TSQL::Common::Regexp->qr_GOtoken();
 
 
-state $qr_createproceduretoken  //= TSQL::Common::Regexp->qr_createproceduretoken();  
-state $qr_alterproceduretoken   //= TSQL::Common::Regexp->qr_alterproceduretoken();  
-state $qr_createtriggertoken    //= TSQL::Common::Regexp->qr_createtriggertoken();  
-state $qr_altertriggertoken     //= TSQL::Common::Regexp->qr_altertriggertoken();  
-state $qr_createviewtoken       //= TSQL::Common::Regexp->qr_createviewtoken();  
-state $qr_alterviewtoken        //= TSQL::Common::Regexp->qr_alterviewtoken();  
-state $qr_createfunctiontoken   //= TSQL::Common::Regexp->qr_createfunctiontoken();  
-state $qr_alterfunctiontoken    //= TSQL::Common::Regexp->qr_alterfunctiontoken();  
+my $qr_createproceduretoken  //= TSQL::Common::Regexp->qr_createproceduretoken();  
+my $qr_alterproceduretoken   //= TSQL::Common::Regexp->qr_alterproceduretoken();  
+my $qr_createtriggertoken    //= TSQL::Common::Regexp->qr_createtriggertoken();  
+my $qr_altertriggertoken     //= TSQL::Common::Regexp->qr_altertriggertoken();  
+my $qr_createviewtoken       //= TSQL::Common::Regexp->qr_createviewtoken();  
+my $qr_alterviewtoken        //= TSQL::Common::Regexp->qr_alterviewtoken();  
+my $qr_createfunctiontoken   //= TSQL::Common::Regexp->qr_createfunctiontoken();  
+my $qr_alterfunctiontoken    //= TSQL::Common::Regexp->qr_alterfunctiontoken();  
 
 sub makeToken  {
 

@@ -39,7 +39,7 @@
             "List::Util" : "0",
             "MooseX::Declare" : "0",
             "TSQL::Common::Regexp" : "0.04",
-            "TSQL::SplitStatement" : "0.1",
+            "TSQL::SplitStatement" : "0.12",
             "Test::Deep" : "0",
             "Test::More" : "0",
             "autodie" : "0",
@@ -50,5 +50,5 @@
       }
    },
    "release_status" : "testing",
-   "version" : "0.03_001"
+   "version" : "0.03_002"
 }

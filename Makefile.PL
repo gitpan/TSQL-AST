@@ -23,7 +23,7 @@ WriteMakefile(
         'List::MoreUtils'               => 0,
         'List::Util'                    => 0,
         'MooseX::Declare'               => 0,
-        'TSQL::SplitStatement'          => 0.10,
+        'TSQL::SplitStatement'          => 0.12,
         'TSQL::Common::Regexp'          => 0.04,
         'autodie'                       => 0,
         'indirect'                      => 0,
