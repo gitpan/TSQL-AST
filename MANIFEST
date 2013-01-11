@@ -50,6 +50,10 @@ lib/TSQL/AST/Token/EndTry.pm
 lib/TSQL/AST/Token/GO.pm
 lib/TSQL/AST/Token/If.pm
 lib/TSQL/AST/Token/While.pm
+lib/TSQL/AST/CreateOrAlterFunction.pm
+lib/TSQL/AST/CreateOrAlterProcedure.pm
+lib/TSQL/AST/CreateOrAlterTrigger.pm
+lib/TSQL/AST/CreateOrAlterView.pm
 samples/parseBatch.sql
 samples/parseIf.sql
 samples/parseWhile.sql
