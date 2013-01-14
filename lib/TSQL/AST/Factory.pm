@@ -1,7 +1,7 @@
 package TSQL::AST::Factory;
 
 use feature "switch";
-use 5.010;
+use 5.014;
 
 use TSQL::AST::Token::Begin;
 use TSQL::AST::Token::BeginCatch;
@@ -38,12 +38,12 @@ TSQL::AST::Factory - Builds various parsing objects.
 
 =head1 VERSION
 
-Version 0.02
+Version 0.03
 
 =cut
 
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 my $qr_begintoken            //= TSQL::Common::Regexp->qr_begintoken();
 my $qr_endtoken              //= TSQL::Common::Regexp->qr_endtoken();

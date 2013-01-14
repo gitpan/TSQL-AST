@@ -3,7 +3,6 @@ use MooseX::Declare;
 class TSQL::AST::SQLScript extends TSQL::AST::SQLFragment {
 
 use TSQL::AST::SQLBatch;
-use 5.010;
 use Data::Dumper;
 
 =head1 NAME
@@ -12,11 +11,11 @@ TSQL::AST::SQLScript - Represents a TSQL Script.
 
 =head1 VERSION
 
-Version 0.01 
+Version 0.02 
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 has 'batches' => (
       is  => 'rw',

@@ -1,4 +1,4 @@
-use 5.010;
+use 5.014;
 use strict;
 use warnings;
 use ExtUtils::MakeMaker;
@@ -8,7 +8,7 @@ WriteMakefile(
     AUTHOR              => q{Ded MedVed <dedmedved@cpan.org>},
     VERSION_FROM        => 'lib/TSQL/AST.pm',
     ABSTRACT_FROM       => 'lib/TSQL/AST.pm',
-    MIN_PERL_VERSION    => 5.10.0,
+    MIN_PERL_VERSION    => 5.14.0,
     ($ExtUtils::MakeMaker::VERSION >= 6.3002
       ? ('LICENSE'=> 'perl')
       : ()),

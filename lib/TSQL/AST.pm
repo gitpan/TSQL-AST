@@ -2,7 +2,7 @@ use MooseX::Declare;
 
 class TSQL::AST {
 
-use 5.010;
+use 5.014;
 use warnings;
 use strict;
 
@@ -18,11 +18,11 @@ TSQL::AST - 'Abstract Syntax Tree' for TSQL.
 
 =head1 VERSION
 
-Version 0.03_005
+Version 0.03_006
 
 =cut
 
-our $VERSION = '0.03_005';
+our $VERSION = '0.03_006';
 
 has 'script' => (
       is  => 'rw',
