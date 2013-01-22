@@ -18,11 +18,11 @@ TSQL::AST - 'Abstract Syntax Tree' for TSQL.
 
 =head1 VERSION
 
-Version 0.03_006
+Version 0.03_007
 
 =cut
 
-our $VERSION = '0.03_006';
+our $VERSION = '0.03_007';
 
 has 'script' => (
       is  => 'rw',
@@ -70,6 +70,8 @@ Note TSQL::AST is only intended to parse syntactically valid TSQL.
 TSQL::AST depends on the following modules:
 
 =over 4
+
+=item * L<TSQL::SplitStatement>
 
 =item * L<TSQL::Common::Regexp>
 
