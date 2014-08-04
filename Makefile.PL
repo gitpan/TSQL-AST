@@ -9,11 +9,11 @@ WriteMakefile(
     VERSION_FROM        => 'lib/TSQL/AST.pm',
     ABSTRACT_FROM       => 'lib/TSQL/AST.pm',
     MIN_PERL_VERSION    => 5.14.0,
-    ($ExtUtils::MakeMaker::VERSION >= 6.3002
+    ($ExtUtils::MakeMaker::VERSION >= 6.48
       ? ('LICENSE'=> 'perl')
       : ()),
     PL_FILES            => {},
-    EXE_FILES => [],
+    EXE_FILES => ['parsetsql.pl'],
     PREREQ_PM => {
         'Test::More'                    => 0,
         'Test::Deep'                    => 0,
