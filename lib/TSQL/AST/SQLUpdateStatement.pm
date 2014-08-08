@@ -1,4 +1,5 @@
 use MooseX::Declare;
+use warnings;
 
 class TSQL::AST::SQLUpdateStatement extends TSQL::AST::SQLStatement {
 

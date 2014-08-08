@@ -1,4 +1,5 @@
 package TSQL::AST::Factory;
+use warnings;
 
 use feature "switch";
 use 5.014;

@@ -1,4 +1,5 @@
 use MooseX::Declare;
+use warnings;
 
 class TSQL::AST::SQLWhileStatement extends TSQL::AST::SQLStatement {
 

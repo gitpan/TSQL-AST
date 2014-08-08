@@ -18,11 +18,11 @@ TSQL::AST - 'Abstract Syntax Tree' for TSQL.
 
 =head1 VERSION
 
-Version 0.03_011
+Version 0.03_012
 
 =cut
 
-our $VERSION = '0.03_011';
+our $VERSION = '0.03_012';
 
 has 'script' => (
       is  => 'rw',

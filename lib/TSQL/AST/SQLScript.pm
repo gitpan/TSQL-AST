@@ -1,4 +1,5 @@
 use MooseX::Declare;
+use warnings;
 
 class TSQL::AST::SQLScript extends TSQL::AST::SQLFragment {
 

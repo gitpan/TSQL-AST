@@ -1,4 +1,5 @@
 use MooseX::Declare;
+use warnings;
 
 class TSQL::AST::SQLBatch extends TSQL::AST::SQLFragment {
 
