@@ -44,7 +44,7 @@ Version 0.03
 =cut
 
 
-our $VERSION = '0.03';
+#our \$VERSION  = '0.03';
 
 my $qr_begintoken            //= TSQL::Common::Regexp->qr_begintoken();
 my $qr_endtoken              //= TSQL::Common::Regexp->qr_endtoken();

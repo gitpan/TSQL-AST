@@ -27,7 +27,7 @@ Version 0.03
 
 =cut
 
-our $VERSION = '0.03';
+#our \$VERSION  = '0.03';
 
 has 'statements' => (
       is  => 'rw',

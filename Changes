@@ -6,3 +6,5 @@ Revision history for TSQL::AST
         Fixed multiple batch script parsing. Added tests.
 0.03    10/01/13
         Handle main DDL Create/Alter statements.
+0.04    03/09/2014
+        Kwalitee gaming.

@@ -23,7 +23,7 @@ Version 0.02
 
 =cut
 
-our $VERSION = '0.02';
+#our \$VERSION  = '0.02';
 
 use feature "switch";
 
